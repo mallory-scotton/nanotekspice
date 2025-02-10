@@ -66,6 +66,16 @@ void Circuit::setLink(
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::simulate(void)
 {
+    for (const auto& [name, value] : m_pendingInputs) {
+        auto& component = getComponent(name);
+        if (InputComponent* input =
+            dynamic_cast<InputComponent*>(&component))
+            input->setValue(value);
+        else if (ClockComponent* clock =
+            dynamic_cast<ClockComponent*>(&component))
+            clock->setValue(value);
+    }
+    m_pendingInputs.clear();
     m_tick++;
     for (auto& [name, component] : m_components)
         component->simulate(m_tick);
@@ -86,15 +96,11 @@ void Circuit::setValue(const std::string& name, Tristate value)
     InputComponent* input = dynamic_cast<
         InputComponent*>(&getComponent(name));
 
-    if (input) {
-        input->setValue(value);
-        return;
-    }
-
     ClockComponent* clockComponent = dynamic_cast<
         ClockComponent*>(&getComponent(name));
-    if (clockComponent) {
-        clockComponent->setValue(value);
+
+    if (input || clockComponent) {
+        m_pendingInputs[name] = value;
         return;
     }
 
@@ -115,7 +121,7 @@ void Circuit::displayInputs(void) const
     std::sort(inputNames.begin(), inputNames.end());
     for (const auto& name : inputNames) {
         Tristate value = m_components.at(name)->compute(1);
-        std::cout << name << ": " 
+        std::cout << "  " << name << ": " 
                   << (value == Tristate::True ? "1" : 
                       value == Tristate::False ? "0" : "U") 
                   << std::endl;
@@ -135,7 +141,7 @@ void Circuit::displayOutputs(void) const
     std::sort(outputNames.begin(), outputNames.end());
     for (const auto& name : outputNames) {
         Tristate value = m_components.at(name)->compute(1);
-        std::cout << name << ": " 
+        std::cout << "  " << name << ": " 
                   << (value == Tristate::True ? "1" : 
                       value == Tristate::False ? "0" : "U") 
                   << std::endl;
@@ -148,6 +154,12 @@ void Circuit::display(void) const
     std::cout << "tick: " << m_tick << std::endl;
     displayInputs();
     displayOutputs();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+const Circuit::ComponentMap& Circuit::getComponents(void) const
+{
+    return (m_components);
 }
 
 } // namespace nts

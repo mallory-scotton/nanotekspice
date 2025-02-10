@@ -41,6 +41,8 @@ CXXFLAGS			=	-std=c++20 -Wall -Wextra -Iinclude
 SOURCES				=	source/AComponent.cpp \
 						source/ComponentFactory.cpp \
 						source/Circuit.cpp \
+						source/CircuitParser.cpp \
+						source/CircuitSimulator.cpp \
 						source/components/AndGateComponent.cpp \
 						source/components/C4081Component.cpp \
 						source/components/ClockComponent.cpp \

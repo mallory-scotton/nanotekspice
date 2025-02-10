@@ -17,6 +17,9 @@ build/
 *.out
 .build
 
+# NTS file
+*.nts
+
 # ImGui
 imgui.ini
 
