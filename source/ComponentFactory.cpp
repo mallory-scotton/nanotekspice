@@ -62,6 +62,10 @@ ComponentFactory::Component ComponentFactory::createComponent(
         {"clock", &ComponentFactory::createClock},
         {"true", &ComponentFactory::createTrue},
         {"false", &ComponentFactory::createFalse},
+        {"and", &ComponentFactory::createAnd},
+        {"or", &ComponentFactory::createOr},
+        {"xor", &ComponentFactory::createXor},
+        {"not", &ComponentFactory::createNot},
         {"4081", &ComponentFactory::create4081}
         // ...
     };
