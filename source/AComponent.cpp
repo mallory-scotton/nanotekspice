@@ -39,14 +39,20 @@ namespace nts
 AComponent::AComponent(const std::string& name)
     : m_name(name)
     , m_state(Tristate::Undefined)
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+AComponent::AComponent(const std::string& name, size_t size)
+    : m_name(name)
+    , m_state(Tristate::Undefined)
 {
-    m_links.resize(getMaxPins());
+    m_links.resize(size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void AComponent::setLink(size_t pin, IComponent& other, size_t otherPin)
 {
-    if (pin > getMaxPins() || pin == 0)
+    if (pin > m_links.size() || pin == 0)
         throw std::out_of_range("Invalid pin number");
     m_links[pin - 1] = std::make_pair(&other, otherPin);
 }

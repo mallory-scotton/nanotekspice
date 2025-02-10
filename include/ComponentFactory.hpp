@@ -48,9 +48,21 @@ namespace nts
 class ComponentFactory
 {
 public:
+    ///////////////////////////////////////////////////////////////////////////
+    // Type alias
+    ///////////////////////////////////////////////////////////////////////////
     using Component = std::unique_ptr<IComponent>;
 
 public:
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief
+    ///
+    /// \param type
+    /// \param name
+    ///
+    /// \return
+    ///
+    ///////////////////////////////////////////////////////////////////////////
     static Component createComponent(
         const std::string& type,
         const std::string& name
@@ -62,6 +74,14 @@ private:
     static Component createClock(const std::string& name);
     static Component createTrue(const std::string& name);
     static Component createFalse(const std::string& name);
+
+private:
+    static Component createAnd(const std::string& name);
+    static Component createOr(const std::string& name);
+    static Component createXor(const std::string& name);
+    static Component createNot(const std::string& name);
+
+private:
     static Component create4081(const std::string& name);
     // ...
 };

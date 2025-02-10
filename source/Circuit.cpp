@@ -27,6 +27,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Dependencies
 ///////////////////////////////////////////////////////////////////////////////
+#include "Circuit.hpp"
+#include "ComponentFactory.hpp"
 #include "components/InputComponent.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,29 +38,69 @@ namespace nts
 {
 
 ///////////////////////////////////////////////////////////////////////////////
-InputComponent::InputComponent(const std::string& name)
-    : AComponent(name, 1)
-    , m_value(Tristate::Undefined)
+void Circuit::addComponent(const std::string& type, const std::string& name)
+{
+    if (m_components.find(name) != m_components.end())
+        throw std::runtime_error("Component already exists: " + name);
+    m_components[name] = ComponentFactory::createComponent(type, name);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::setLink(
+    const std::string& comp1,
+    size_t pin1,
+    const std::string& comp2,
+    size_t pin2
+)
+{
+    auto& component1 = getComponent(comp1);
+    auto& component2 = getComponent(comp2);
+    component1.setLink(pin1, component2, pin2);
+    component2.setLink(pin2, component1, pin1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::simulate(void)
+{
+    m_tick++;
+    for (auto& [name, component] : m_components)
+        component->simulate(m_tick);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+IComponent& Circuit::getComponent(const std::string& name)
+{
+    auto it = m_components.find(name);
+    if (it == m_components.end())
+        throw std::runtime_error("Unknown component: " + name);
+    return *it->second;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::setValue(const std::string& name, Tristate value)
+{
+    (void)name;
+    (void)value;
+    // auto* input = dynamic_cast<InputComponent*>(getComponent(name).get());
+    // if (!input)
+        // throw std::runtime_error("Component is not an input: " + name);
+    // input->setValue(value);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::displayInputs(void) const
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
-void InputComponent::simulate(size_t tick)
-{
-    (void)tick;
-}
+void Circuit::displayOutputs(void) const
+{}
 
 ///////////////////////////////////////////////////////////////////////////////
-Tristate InputComponent::compute(size_t pin)
+void Circuit::display(void) const
 {
-    if (pin != 1)
-        throw std::out_of_range("Invalid pin for input component");
-    return (m_value);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void InputComponent::setValue(Tristate value)
-{
-    m_value = value;
+    std::cout << "tick: " << m_tick << std::endl;
+    displayInputs();
+    displayOutputs();
 }
 
 } // namespace nts

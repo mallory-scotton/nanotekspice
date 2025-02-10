@@ -33,6 +33,10 @@
 #include "components/ClockComponent.hpp"
 #include "components/TrueComponent.hpp"
 #include "components/FalseComponent.hpp"
+#include "components/AndGateComponent.hpp"
+#include "components/OrGateComponent.hpp"
+#include "components/XorGateComponent.hpp"
+#include "components/NotGateComponent.hpp"
 #include "components/C4081Component.hpp"
 #include <unordered_map>
 #include <functional>
@@ -106,6 +110,38 @@ ComponentFactory::Component ComponentFactory::createFalse(
 )
 {
     return (std::make_unique<FalseComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createAnd(
+    const std::string& name
+)
+{
+    return (std::make_unique<AndGateComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createOr(
+    const std::string& name
+)
+{
+    return (std::make_unique<OrGateComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createXor(
+    const std::string& name
+)
+{
+    return (std::make_unique<XorGateComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createNot(
+    const std::string& name
+)
+{
+    return (std::make_unique<NotGateComponent>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

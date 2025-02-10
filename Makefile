@@ -38,7 +38,21 @@ CXXFLAGS			=	-std=c++20 -Wall -Wextra -Iinclude
 ## Sources
 ###############################################################################
 
-SOURCES				=	source/AComponent.cpp
+SOURCES				=	source/AComponent.cpp \
+						source/ComponentFactory.cpp \
+						source/Circuit.cpp \
+						source/components/AndGateComponent.cpp \
+						source/components/C4081Component.cpp \
+						source/components/ClockComponent.cpp \
+						source/components/FalseComponent.cpp \
+						source/components/GateComponent.cpp \
+						source/components/InputComponent.cpp \
+						source/components/NotGateComponent.cpp \
+						source/components/OrGateComponent.cpp \
+						source/components/OutputComponent.cpp \
+						source/components/TrueComponent.cpp \
+						source/components/XorGateComponent.cpp \
+						source/main.cpp
 
 OBJECTS				=	$(SOURCES:.cpp=.o)
 
