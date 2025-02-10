@@ -29,7 +29,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Circuit.hpp"
 #include "ComponentFactory.hpp"
+#include "components/OutputComponent.hpp"
 #include "components/InputComponent.hpp"
+#include "components/ClockComponent.hpp"
+#include <algorithm>
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -73,27 +77,70 @@ IComponent& Circuit::getComponent(const std::string& name)
     auto it = m_components.find(name);
     if (it == m_components.end())
         throw std::runtime_error("Unknown component: " + name);
-    return *it->second;
+    return (*it->second);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::setValue(const std::string& name, Tristate value)
 {
-    (void)name;
-    (void)value;
-    // auto* input = dynamic_cast<InputComponent*>(getComponent(name).get());
-    // if (!input)
-        // throw std::runtime_error("Component is not an input: " + name);
-    // input->setValue(value);
+    InputComponent* input = dynamic_cast<
+        InputComponent*>(&getComponent(name));
+
+    if (input) {
+        input->setValue(value);
+        return;
+    }
+
+    ClockComponent* clockComponent = dynamic_cast<
+        ClockComponent*>(&getComponent(name));
+    if (clockComponent) {
+        clockComponent->setValue(value);
+        return;
+    }
+
+    throw std::runtime_error("Component is not an input or clock: " + name);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::displayInputs(void) const
-{}
+{
+    std::vector<std::string> inputNames;
+    std::cout << "input(s):" << std::endl;
+    for (const auto& [name, component] : m_components) {
+        if (dynamic_cast<InputComponent*>(component.get()) || 
+            dynamic_cast<ClockComponent*>(component.get())) {
+            inputNames.push_back(name);
+        }
+    }
+    std::sort(inputNames.begin(), inputNames.end());
+    for (const auto& name : inputNames) {
+        Tristate value = m_components.at(name)->compute(1);
+        std::cout << name << ": " 
+                  << (value == Tristate::True ? "1" : 
+                      value == Tristate::False ? "0" : "U") 
+                  << std::endl;
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::displayOutputs(void) const
-{}
+{
+    std::vector<std::string> outputNames;
+    std::cout << "output(s):" << std::endl;
+    for (const auto& [name, component] : m_components) {
+        if (dynamic_cast<OutputComponent*>(component.get())) {
+            outputNames.push_back(name);
+        }
+    }
+    std::sort(outputNames.begin(), outputNames.end());
+    for (const auto& name : outputNames) {
+        Tristate value = m_components.at(name)->compute(1);
+        std::cout << name << ": " 
+                  << (value == Tristate::True ? "1" : 
+                      value == Tristate::False ? "0" : "U") 
+                  << std::endl;
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::display(void) const
