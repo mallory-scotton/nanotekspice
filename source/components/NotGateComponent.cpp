@@ -59,7 +59,7 @@ Tristate NotGateComponent::compute(size_t pin)
 {
     if (pin < 1 || pin > 2)
         throw std::out_of_range("Invalid pin for NOT gate");
-    if (pin == 3) {
+    if (pin == 2) {
         Tristate input = getInputPinValue(1);
 
         if (input == Tristate::Undefined)
