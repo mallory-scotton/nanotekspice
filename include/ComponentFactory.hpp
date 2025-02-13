@@ -83,6 +83,20 @@ private:
 
 private:
     static Component create4081(const std::string& name);
+    static Component create4001(const std::string& name);
+    static Component create4011(const std::string& name);
+    static Component create4030(const std::string& name);
+    static Component create4069(const std::string& name);
+    static Component create4071(const std::string& name);
+    static Component create4008(const std::string& name);
+    static Component create4013(const std::string& name);
+    static Component create4017(const std::string& name);
+    static Component create4040(const std::string& name);
+    static Component create4094(const std::string& name);
+    static Component create4512(const std::string& name);
+    static Component create4514(const std::string& name);
+    static Component create4801(const std::string& name);
+    static Component create2716(const std::string& name);
     // ...
 };
 

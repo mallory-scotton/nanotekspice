@@ -66,7 +66,21 @@ ComponentFactory::Component ComponentFactory::createComponent(
         {"or", &ComponentFactory::createOr},
         {"xor", &ComponentFactory::createXor},
         {"not", &ComponentFactory::createNot},
-        {"4081", &ComponentFactory::create4081}
+        {"4081", &ComponentFactory::create4081},
+        {"4001", &ComponentFactory::create4001},
+        {"4011", &ComponentFactory::create4011},
+        {"4030", &ComponentFactory::create4030},
+        {"4069", &ComponentFactory::create4069},
+        {"4071", &ComponentFactory::create4071},
+        {"4008", &ComponentFactory::create4008},
+        {"4013", &ComponentFactory::create4013},
+        {"4017", &ComponentFactory::create4017},
+        {"4040", &ComponentFactory::create4040},
+        {"4094", &ComponentFactory::create4094},
+        {"4512", &ComponentFactory::create4512},
+        {"4514", &ComponentFactory::create4514},
+        {"4801", &ComponentFactory::create4801},
+        {"2716", &ComponentFactory::create2716}
         // ...
     };
 
@@ -150,6 +164,118 @@ ComponentFactory::Component ComponentFactory::createNot(
 
 ///////////////////////////////////////////////////////////////////////////////
 ComponentFactory::Component ComponentFactory::create4081(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4001(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4011(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4030(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4069(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4071(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4008(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4013(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4017(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4040(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4094(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4512(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4514(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create4801(
+    const std::string& name
+)
+{
+    return (std::make_unique<C4081Component>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::create2716(
     const std::string& name
 )
 {
