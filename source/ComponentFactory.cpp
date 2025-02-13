@@ -28,16 +28,29 @@
 // Dependencies
 ///////////////////////////////////////////////////////////////////////////////
 #include "ComponentFactory.hpp"
-#include "components/InputComponent.hpp"
+#include "components/GateComponent.hpp"
 #include "components/OutputComponent.hpp"
-#include "components/ClockComponent.hpp"
-#include "components/TrueComponent.hpp"
-#include "components/FalseComponent.hpp"
-#include "components/AndGateComponent.hpp"
-#include "components/OrGateComponent.hpp"
-#include "components/XorGateComponent.hpp"
 #include "components/NotGateComponent.hpp"
-#include "components/C4081Component.hpp"
+#include "components/NandGateComponent.hpp"
+#include "components/OrGateComponent.hpp"
+#include "components/C2716Component.hpp"
+#include "components/InputComponent.hpp"
+#include "components/ClockComponent.hpp"
+#include "components/C4008Component.hpp"
+#include "components/NorGateComponent.hpp"
+#include "components/AndGateComponent.hpp"
+#include "components/C4801Component.hpp"
+#include "components/C4069Component.hpp"
+#include "components/TrueComponent.hpp"
+#include "components/C4013Component.hpp"
+#include "components/FalseComponent.hpp"
+#include "components/FourGateComponent.hpp"
+#include "components/C4514Component.hpp"
+#include "components/C4017Component.hpp"
+#include "components/C4040Component.hpp"
+#include "components/C4512Component.hpp"
+#include "components/XorGateComponent.hpp"
+#include "components/C4094Component.hpp"
 #include <unordered_map>
 #include <functional>
 
@@ -81,7 +94,6 @@ ComponentFactory::Component ComponentFactory::createComponent(
         {"4514", &ComponentFactory::create4514},
         {"4801", &ComponentFactory::create4801},
         {"2716", &ComponentFactory::create2716}
-        // ...
     };
 
     auto it = creators.find(type);
@@ -175,7 +187,7 @@ ComponentFactory::Component ComponentFactory::create4001(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4001Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,7 +195,7 @@ ComponentFactory::Component ComponentFactory::create4011(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4011Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -191,7 +203,7 @@ ComponentFactory::Component ComponentFactory::create4030(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4030Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,7 +211,7 @@ ComponentFactory::Component ComponentFactory::create4069(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4069Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,7 +219,7 @@ ComponentFactory::Component ComponentFactory::create4071(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4071Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -215,7 +227,7 @@ ComponentFactory::Component ComponentFactory::create4008(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4008Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,7 +235,7 @@ ComponentFactory::Component ComponentFactory::create4013(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4013Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -231,7 +243,7 @@ ComponentFactory::Component ComponentFactory::create4017(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4017Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -239,7 +251,7 @@ ComponentFactory::Component ComponentFactory::create4040(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4040Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -247,7 +259,7 @@ ComponentFactory::Component ComponentFactory::create4094(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4094Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,7 +267,7 @@ ComponentFactory::Component ComponentFactory::create4512(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4512Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -263,7 +275,7 @@ ComponentFactory::Component ComponentFactory::create4514(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4514Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,7 +283,7 @@ ComponentFactory::Component ComponentFactory::create4801(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C4801Component>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -279,7 +291,7 @@ ComponentFactory::Component ComponentFactory::create2716(
     const std::string& name
 )
 {
-    return (std::make_unique<C4081Component>(name));
+    return (std::make_unique<C2716Component>(name));
 }
 
 } // namespace nts
