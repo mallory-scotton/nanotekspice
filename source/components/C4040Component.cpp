@@ -27,7 +27,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Dependencies
 ///////////////////////////////////////////////////////////////////////////////
-#include "components/C4081Component.hpp"
+#include "components/C4040Component.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -36,21 +36,21 @@ namespace nts
 {
 
 ///////////////////////////////////////////////////////////////////////////////
-C4081Component::C4081Component(const std::string& name)
+C4040Component::C4040Component(const std::string& name)
     : AComponent(name, 14)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
-void C4081Component::simulate(size_t tick)
+void C4040Component::simulate(size_t tick)
 {
     (void)tick;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-Tristate C4081Component::compute(size_t pin)
+Tristate C4040Component::compute(size_t pin)
 {
     if (pin != 1)
-        throw std::out_of_range("Invalid pin for 4081 component");
+        throw std::out_of_range("Invalid pin for 4040 component");
     return (Tristate::False);
 }
 

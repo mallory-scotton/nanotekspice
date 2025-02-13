@@ -45,6 +45,20 @@ SOURCES				=	source/AComponent.cpp \
 						source/CircuitSimulator.cpp \
 						source/components/AndGateComponent.cpp \
 						source/components/C4081Component.cpp \
+						source/components/C4001Component.cpp \
+						source/components/C4011Component.cpp \
+						source/components/C4030Component.cpp \
+						source/components/C4069Component.cpp \
+						source/components/C4071Component.cpp \
+						source/components/C4008Component.cpp \
+						source/components/C4013Component.cpp \
+						source/components/C4017Component.cpp \
+						source/components/C4040Component.cpp \
+						source/components/C4094Component.cpp \
+						source/components/C4512Component.cpp \
+						source/components/C4514Component.cpp \
+						source/components/C4801Component.cpp \
+						source/components/C2716Component.cpp \
 						source/components/ClockComponent.cpp \
 						source/components/FalseComponent.cpp \
 						source/components/GateComponent.cpp \
