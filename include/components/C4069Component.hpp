@@ -77,6 +77,8 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////
     Tristate compute(size_t pin) override;
+
+    void setLink(size_t pin, IComponent& other, size_t otherPin) override;
 };
 
 } // namespace nts

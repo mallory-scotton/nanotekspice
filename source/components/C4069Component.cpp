@@ -71,4 +71,17 @@ Tristate C4069Component::compute(size_t pin)
     return m_gates[gateIndex]->compute(mappedPin);
 }
 
+void C4069Component::setLink(size_t pin, IComponent& other, size_t otherPin)
+{
+    if (pin > m_links.size() || pin == 0)
+        throw std::out_of_range("Invalid pin number");
+    if (pin < 7) {
+        size_t gatePin = pin - 1;
+        m_gates[(pin - 1) / 2]->setLink(gatePin % 2, other, otherPin);
+        return;
+    }
+    size_t gatePin = pin - 7;
+    m_gates[(pin - 7) / 2 + 3]->setLink(1 - gatePin, other, otherPin);
+}
+
 } // namespace nts
