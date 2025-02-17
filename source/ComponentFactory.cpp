@@ -44,6 +44,7 @@
 #include "components/TrueComponent.hpp"
 #include "components/C4013Component.hpp"
 #include "components/FalseComponent.hpp"
+#include "components/FlipFlopComponent.hpp"
 #include "components/FourGateComponent.hpp"
 #include "components/C4514Component.hpp"
 #include "components/C4017Component.hpp"

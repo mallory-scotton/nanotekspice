@@ -62,6 +62,7 @@ SOURCES				=	source/AComponent.cpp \
 						source/components/C2716Component.cpp \
 						source/components/ClockComponent.cpp \
 						source/components/FalseComponent.cpp \
+						source/components/FlipFlopComponent.cpp \
 						source/components/GateComponent.cpp \
 						source/components/FourGateComponent.cpp \
 						source/components/InputComponent.cpp \
