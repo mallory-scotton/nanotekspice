@@ -51,6 +51,11 @@
 #include "components/C4512Component.hpp"
 #include "components/XorGateComponent.hpp"
 #include "components/C4094Component.hpp"
+#include "components/C4011Component.hpp"
+#include "components/C4001Component.hpp"
+#include "components/C4030Component.hpp"
+#include "components/C4071Component.hpp"
+#include "components/C4081Component.hpp"
 #include <unordered_map>
 #include <functional>
 
