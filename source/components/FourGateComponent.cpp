@@ -82,4 +82,23 @@ Tristate FourGateComponent::compute(size_t pin)
     return (Tristate::Undefined);
 }
 
+void FourGateComponent::setLink(size_t pin, IComponent& other, size_t otherPin)
+{
+    if (pin > m_links.size() || pin == 0)
+        throw std::out_of_range("Invalid pin number");
+    if (pin < 4) {
+        m_gates[0]->setLink(pin, other, otherPin);
+        return;
+    }
+    if (pin < 7) {
+        m_gates[1]->setLink(3 - (pin - 4), other, otherPin);
+        return;
+    }
+    if (pin < 11) {
+        m_gates[2]->setLink(pin - 7, other, otherPin);
+        return;
+    }
+    m_gates[3]->setLink(3 - (pin - 10), other, otherPin);
+}
+
 } // namespace nts
