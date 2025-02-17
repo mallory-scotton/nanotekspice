@@ -81,8 +81,11 @@ ComponentFactory::Component ComponentFactory::createComponent(
         {"clock", &ComponentFactory::createClock},
         {"true", &ComponentFactory::createTrue},
         {"false", &ComponentFactory::createFalse},
+        {"flipflop", &ComponentFactory::createFlipFlop},
         {"and", &ComponentFactory::createAnd},
+        {"nand", &ComponentFactory::createNand},
         {"or", &ComponentFactory::createOr},
+        {"nor", &ComponentFactory::createNor},
         {"xor", &ComponentFactory::createXor},
         {"not", &ComponentFactory::createNot},
         {"4081", &ComponentFactory::create4081},
@@ -149,6 +152,14 @@ ComponentFactory::Component ComponentFactory::createFalse(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createFlipFlop(
+    const std::string& name
+)
+{
+    return (std::make_unique<FlipFlopComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ComponentFactory::Component ComponentFactory::createAnd(
     const std::string& name
 )
@@ -157,11 +168,27 @@ ComponentFactory::Component ComponentFactory::createAnd(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createNand(
+    const std::string& name
+)
+{
+    return (std::make_unique<NandGateComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ComponentFactory::Component ComponentFactory::createOr(
     const std::string& name
 )
 {
     return (std::make_unique<OrGateComponent>(name));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+ComponentFactory::Component ComponentFactory::createNor(
+    const std::string& name
+)
+{
+    return (std::make_unique<NorGateComponent>(name));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

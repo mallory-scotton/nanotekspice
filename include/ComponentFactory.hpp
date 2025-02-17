@@ -77,9 +77,12 @@ private:
 
 private:
     static Component createAnd(const std::string& name);
+    static Component createNand(const std::string& name);
     static Component createOr(const std::string& name);
+    static Component createNor(const std::string& name);
     static Component createXor(const std::string& name);
     static Component createNot(const std::string& name);
+    static Component createFlipFlop(const std::string& name);
 
 private:
     static Component create4081(const std::string& name);
