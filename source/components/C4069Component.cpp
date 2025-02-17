@@ -38,7 +38,17 @@ namespace nts
 ///////////////////////////////////////////////////////////////////////////////
 C4069Component::C4069Component(const std::string& name)
     : AComponent(name, 14)
-{}
+{
+    for (int i = 0; i < 6; i++)
+        m_gates[i] = new NotGateComponent(name);
+}
+
+C4069Component::~C4069Component()
+{
+    for (int i = 0; i < 6; i++)
+        if (m_gates[i])
+            delete m_gates[i];
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void C4069Component::simulate(size_t tick)
@@ -49,9 +59,16 @@ void C4069Component::simulate(size_t tick)
 ///////////////////////////////////////////////////////////////////////////////
 Tristate C4069Component::compute(size_t pin)
 {
-    if (pin != 1)
+    if (pin < 1 || pin > 13 || pin == 7)
         throw std::out_of_range("Invalid pin for 4069 component");
-    return (Tristate::False);
+    if (pin < 7) {
+        size_t gateIndex = (pin - 1) / 2;
+        size_t mappedPin = ((pin - 1) % 2) + 1;
+        return m_gates[gateIndex]->compute(mappedPin);
+    }
+    size_t gateIndex = 3 + ((pin - 8) / 2);
+    size_t mappedPin = ((pin - 8) % 2) + 1;
+    return m_gates[gateIndex]->compute(mappedPin);
 }
 
 } // namespace nts
