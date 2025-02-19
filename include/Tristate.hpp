@@ -44,7 +44,7 @@ namespace nts
 /// \brief
 ///
 ///////////////////////////////////////////////////////////////////////////////
-enum class Tristate : bool
+enum Tristate : int
 {
     Undefined = (-true),        //<!
     True = true,                //<!

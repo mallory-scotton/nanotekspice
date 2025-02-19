@@ -43,6 +43,7 @@ SOURCES				=	source/AComponent.cpp \
 						source/Circuit.cpp \
 						source/CircuitParser.cpp \
 						source/CircuitSimulator.cpp \
+						source/Tristate.cpp \
 						source/components/AndGateComponent.cpp \
 						source/components/NandGateComponent.cpp \
 						source/components/C4069Component.cpp \
