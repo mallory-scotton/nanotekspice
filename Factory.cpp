@@ -46,21 +46,21 @@ Factory::Factory(void)
 
     registerComponent<Sequencials::FlipFlop>    ("flipflop");
 
-    // registerComponent<IComponent>           ("2716");
+    registerComponent<Components::C4001>                    ("2716");
     registerComponent<Components::C4001>        ("4001");
-    // registerComponent<IComponent>           ("4008");
+    registerComponent<Components::C4001>                    ("4008");
     registerComponent<Components::C4011>        ("4011");
-    // registerComponent<IComponent>           ("4013");
-    // registerComponent<IComponent>           ("4017");
+    registerComponent<Components::C4001>                    ("4013");
+    registerComponent<Components::C4001>                    ("4017");
     registerComponent<Components::C4030>        ("4030");
-    // registerComponent<IComponent>           ("4040");
+    registerComponent<Components::C4001>                    ("4040");
     registerComponent<Components::C4069>        ("4069");
     registerComponent<Components::C4071>        ("4071");
     registerComponent<Components::C4081>        ("4081");
-    // registerComponent<IComponent>           ("4094");
-    // registerComponent<IComponent>           ("4512");
-    // registerComponent<IComponent>           ("4514");
-    // registerComponent<IComponent>           ("4801");
+    registerComponent<Components::C4001>                    ("4094");
+    registerComponent<Components::C4001>                    ("4512");
+    registerComponent<Components::C4001>                    ("4514");
+    registerComponent<Components::C4001>                    ("4801");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
