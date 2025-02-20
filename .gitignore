@@ -1,0 +1,35 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unigore all dirs
+!*/
+
+# Builded objects
+build/
+*.d
+*.o
+*.a
+*.so
+*.dll
+*.out
+.build
+
+# ImGui
+imgui.ini
+
+# Unit tests files
+*.gcda
+*.gcno
+
+# IDE related folders
+.idea/
+.vscode/
+
+# Unignore Makefile
+!Makefile
+
+# Unignore AUTHORS
+!AUTHORS
