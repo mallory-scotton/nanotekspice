@@ -39,20 +39,20 @@ Tristate operator~(const Tristate& state)
 ///////////////////////////////////////////////////////////////////////////////
 Tristate operator&(const Tristate& lhs, const Tristate& rhs)
 {
+    if (lhs == Tristate::False || rhs == Tristate::False)
+        return (Tristate::False);
     if (lhs == Tristate::Undefined || rhs == Tristate::Undefined)
         return (Tristate::Undefined);
-    if (lhs == Tristate::True && rhs == Tristate::True)
-        return (Tristate::True);
-    return (Tristate::False);
+    return (Tristate::True);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 Tristate operator|(const Tristate& lhs, const Tristate& rhs)
 {
-    if (lhs == Tristate::Undefined || rhs == Tristate::Undefined)
-        return (Tristate::Undefined);
     if (lhs == Tristate::True || rhs == Tristate::True)
         return (Tristate::True);
+    if (lhs == Tristate::Undefined || rhs == Tristate::Undefined)
+        return (Tristate::Undefined);
     return (Tristate::False);
 }
 
