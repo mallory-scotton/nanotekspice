@@ -20,6 +20,7 @@ QuadGate<GateType>::QuadGate(const std::string& name)
         GateType(name + "_3"),
         GateType(name + "_4"),
     }
+    , m_initialized(false)
 {
     m_pins[0] = Pin(Pin::Type::INPUT);
     m_pins[1] = Pin(Pin::Type::INPUT);
@@ -43,8 +44,31 @@ QuadGate<GateType>::QuadGate(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename GateType>
+void QuadGate<GateType>::initializeLinks(void)
+{
+    if (m_initialized)
+        return;
+    auto self = shared_from_this();
+
+    m_gates[0].setLink(0, self, 0);
+    m_gates[0].setLink(1, self, 1);
+    m_gates[1].setLink(0, self, 4);
+    m_gates[1].setLink(1, self, 5);
+    m_gates[2].setLink(0, self, 7);
+    m_gates[2].setLink(1, self, 8);
+    m_gates[3].setLink(0, self, 11);
+    m_gates[3].setLink(1, self, 12);
+
+    m_initialized = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename GateType>
 Tristate QuadGate<GateType>::compute(size_t pin)
 {
+    if (!m_initialized)
+        initializeLinks();
+
     switch (pin) {
         case 0:
         case 1:
@@ -59,10 +83,13 @@ Tristate QuadGate<GateType>::compute(size_t pin)
         case 13:
             return (Tristate::Undefined);
         case 2:
+            return (m_gates[0].compute(2));
         case 3:
+            return (m_gates[1].compute(2));
         case 9:
+            return (m_gates[2].compute(2));
         case 10:
-            return (m_gates[pin].compute(2));
+            return (m_gates[3].compute(2));
         default:
             throw OutOfRangePinException();
     }
