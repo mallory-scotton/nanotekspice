@@ -17,6 +17,7 @@ C4013::C4013(const std::string& name)
         Sequencials::FlipFlop(name + "_1"),
         Sequencials::FlipFlop(name + "_2")
     }
+    , m_initialized(false)
 {
     m_pins[3] = Pin(Pin::Type::INPUT);
     m_pins[5] = Pin(Pin::Type::INPUT);
@@ -34,7 +35,13 @@ C4013::C4013(const std::string& name)
 
     m_pins[0] = Pin(Pin::Type::ELECTRICAL);
     m_pins[7] = Pin(Pin::Type::ELECTRICAL);
+}
 
+///////////////////////////////////////////////////////////////////////////////
+void C4013::initializeLinks(void)
+{
+    if (m_initialized)
+        return;
     m_flipflops[0].setLink(0, shared_from_this(), 3);
     m_flipflops[0].setLink(1, shared_from_this(), 5);
     m_flipflops[0].setLink(2, shared_from_this(), 6);
@@ -44,11 +51,16 @@ C4013::C4013(const std::string& name)
     m_flipflops[1].setLink(1, shared_from_this(), 9);
     m_flipflops[1].setLink(2, shared_from_this(), 8);
     m_flipflops[1].setLink(3, shared_from_this(), 10);
+
+    m_initialized = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 Tristate C4013::compute(size_t pin)
 {
+    if (!m_initialized)
+        initializeLinks();
+
     switch (pin) {
         case 0:
         case 7:
