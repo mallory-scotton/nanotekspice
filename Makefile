@@ -59,6 +59,7 @@ SOURCES				=	./Main.cpp \
 						./Gates/And.cpp \
 						./Gates/Xor.cpp \
 						./Sequencials/FlipFlop.cpp \
+						./Components/C4008.cpp \
 						./Components/C4013.cpp \
 						./Components/C4069.cpp \
 						./Components/QuadGate.cpp
