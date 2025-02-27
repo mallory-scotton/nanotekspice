@@ -17,6 +17,7 @@
 #include "Gates/Or.hpp"
 #include "Gates/Xor.hpp"
 
+#include "Components/C4008.hpp"
 #include "Components/C4069.hpp"
 #include "Components/C4013.hpp"
 #include "Components/C4017.hpp"
@@ -53,12 +54,12 @@ Factory::Factory(void)
 
     registerComponent<Components::C4001>                    ("2716");
     registerComponent<Components::C4001>        ("4001");
-    registerComponent<Components::C4001>                    ("4008");
+    registerComponent<Components::C4008>        ("4008");
     registerComponent<Components::C4011>        ("4011");
-    registerComponent<Components::C4013>        ("4013"); //
-    registerComponent<Components::C4017>        ("4017"); //
+    registerComponent<Components::C4013>        ("4013");
+    registerComponent<Components::C4017>        ("4017");
     registerComponent<Components::C4030>        ("4030");
-    registerComponent<Components::C4040>        ("4040"); //
+    registerComponent<Components::C4040>        ("4040");
     registerComponent<Components::C4069>        ("4069");
     registerComponent<Components::C4071>        ("4071");
     registerComponent<Components::C4081>        ("4081");
