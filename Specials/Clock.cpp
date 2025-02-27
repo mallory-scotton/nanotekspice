@@ -13,7 +13,7 @@ namespace nts::Specials
 ///////////////////////////////////////////////////////////////////////////////
 Clock::Clock(const std::string& name)
     : AComponent(name, 1)
-    , m_hasSimulated(false)
+    , m_valueWasSet(false)
 {
     m_pins[0] = Pin(Pin::Type::OUTPUT);
 }
@@ -22,6 +22,7 @@ Clock::Clock(const std::string& name)
 void Clock::setValue(Tristate value)
 {
     m_pins[0].setState(value);
+    m_valueWasSet = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,9 +31,12 @@ void Clock::simulate(size_t tick)
     if (m_tick == tick)
         return;
     m_tick = tick;
-    if (m_hasSimulated)
+    if (m_valueWasSet) {
+        m_valueWasSet = false;
+        return;
+    }
+    if (m_pins[0].getState() != Tristate::Undefined)
         m_pins[0].setState(~(m_pins[0].getState()));
-    m_hasSimulated = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
