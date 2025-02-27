@@ -3,6 +3,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "AComponent.hpp"
 #include "Errors/OutOfRangePinException.hpp"
+#include <set>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -56,12 +57,24 @@ void AComponent::propagateOutput(size_t pin, Tristate state)
 ///////////////////////////////////////////////////////////////////////////////
 Tristate AComponent::getInputState(size_t pin)
 {
+    static thread_local std::set<const IComponent*> computingComponents;
+
     if (pin >= m_pins.size() || m_pins[pin].getType() == Pin::Type::OUTPUT)
         throw ComponentException("Invalid input pin");
     Tristate result = Tristate::Undefined;
     for (const auto& link : m_pins[pin].getLinks()) {
         if (auto component = link.component.lock()) {
+            if (
+                computingComponents.find(component.get()) !=
+                computingComponents.end()
+            ) {
+                return (Tristate::Undefined);
+            }
+
+            computingComponents.insert(component.get());
             result = component->compute(link.pin);
+            computingComponents.erase(component.get());
+
             break;
         }
     }
