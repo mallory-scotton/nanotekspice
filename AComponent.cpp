@@ -4,6 +4,7 @@
 #include "AComponent.hpp"
 #include "Errors/OutOfRangePinException.hpp"
 #include <set>
+#include <queue>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -48,9 +49,20 @@ void AComponent::propagateOutput(size_t pin, Tristate state)
     if (pin >= m_pins.size() && m_pins[pin].getType() == Pin::Type::INPUT)
         throw ComponentException("Invalid output pin");
     m_pins[pin].setState(state);
+
+    static std::queue<std::pair<std::weak_ptr<IComponent>, size_t>> uqueue;
+
     for (const auto& link : m_pins[pin].getLinks()) {
         if (auto component = link.component.lock())
-            component->compute(link.pin);
+            uqueue.push({link.component, link.pin});
+    }
+
+    while (!uqueue.empty()) {
+        auto [weakComponent, componentPin] = uqueue.front();
+        uqueue.pop();
+        if (auto component = weakComponent.lock()) {
+            component->compute(componentPin);
+        }
     }
 }
 
