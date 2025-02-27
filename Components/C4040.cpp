@@ -56,24 +56,24 @@ Tristate C4040::compute(size_t pin)
 
     switch (pin) {
         case 8:
-        case 16:
-            return Tristate::Undefined;
-        case 9:
-        case 7:
-        case 6:
-        case 5:
-        case 3:
+        case 0:
+            return (Tristate::Undefined);
+        case 1:
         case 2:
+        case 3:
         case 4:
-        case 13:
+        case 5:
+        case 6:
+        case 7:
+        case 9:
         case 12:
+        case 13:
         case 14:
         case 15:
-        case 1:
-            return m_counter.compute(pin);
+            return (m_counter.compute(pin));
         case 10:
         case 11:
-            return getInputState(pin);
+            return (getInputState(pin));
         default:
             throw OutOfRangePinException();
     }
