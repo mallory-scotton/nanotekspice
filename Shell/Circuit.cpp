@@ -131,6 +131,8 @@ const Circuit::ComponentMap& Circuit::getComponents(void) const
     return (m_components);
 }
 
+#ifdef NTS_BONUS
+
 ///////////////////////////////////////////////////////////////////////////////
 void Circuit::draw(sf::RenderTarget& target)
 {
@@ -229,5 +231,7 @@ std::shared_ptr<nts::IComponent> Circuit::getComponentAt(
 
     return (nullptr);
 }
+
+#endif
 
 } // namespace nts
