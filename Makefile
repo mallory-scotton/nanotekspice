@@ -32,7 +32,7 @@ TARGET				=	nanotekspice
 
 CXX					=	g++
 
-CXXFLAGS			=	-std=c++20 -Wall -Wextra -I. -g3
+CXXFLAGS			=	-std=c++20 -Wall -Wextra -I.
 
 ###############################################################################
 ## Sources
@@ -69,6 +69,34 @@ SOURCES				=	./Main.cpp \
 
 OBJECTS				=	$(SOURCES:.cpp=.o)
 
+EXTERNAL_LIBS		=	-IExternal/SFML/include \
+						-IExternal/ImGui \
+						-DSFML_STATIC \
+						-LExternal/SFML/build/lib \
+						-lsfml-audio-s \
+						-lsfml-graphics-s \
+						-lsfml-window-s \
+						-lsfml-system-s \
+						-lGL \
+						-lz \
+						-lm \
+						-lX11 \
+						-lXrandr \
+						-lXcursor \
+						-lXinerama \
+						-ludev \
+						-lXi \
+						-lfreetype \
+						-lFLAC \
+						-logg \
+						-lvorbis \
+						-lvorbisfile \
+						-lvorbisenc
+
+SFML_COMPILATION	:=	cd External/SFML && \
+						cmake -S . -B build -DBUILD_SHARED_LIBS=OFF \
+						> /dev/null && cmake --build build > /dev/null
+
 ###############################################################################
 ## Makefile logic
 ###############################################################################
@@ -84,13 +112,14 @@ build: $(OBJECTS)
 debug: CXXFLAGS += -g3
 debug: build
 
+external:
+	$(SFML_COMPILATION)
+
+bonus: CXXFLAGS	+=	$(EXTERNAL_LIBS) -DNTS_BONUS
+bonus: external build
+
 clean:
-	find . -type f -iname "*.o" -delete
-	find . -type f -iname "*.d" -delete
-	find . -type f -iname "*.gcda" -delete
-	find . -type f -iname "*.gcno" -delete
-	find . -type f -iname "*.html" -delete
-	find . -type f -iname "*.css" -delete
+	rm -rf $(OBJECTS)
 
 fclean: clean
 	rm -f $(TARGET)
@@ -98,3 +127,46 @@ fclean: clean
 re: fclean build
 
 .PHONY: all build debug clean fclean re
+
+deps:
+	@echo "Installing dependencies..."
+	@set -e; \
+	if command -v apt > /dev/null; then \
+		echo "Detected apt-based system"; \
+		sudo apt update && sudo apt install -y \
+			libflac-dev \
+			libvorbis-dev \
+			libfreetype6-dev \
+			libudev-dev \
+			libgl1-mesa-dev \
+			libx11-dev \
+			libxrandr-dev \
+			libxcursor-dev \
+			libxinerama-dev \
+			libxi-dev \
+			zlib1g-dev \
+			libogg-dev \
+			libvorbisfile3 \
+			libvorbisenc2; \
+	elif command -v dnf > /dev/null; then \
+		echo "Detected dnf-based system"; \
+		sudo dnf check-update || true; \
+		sudo dnf install -y \
+			flac-devel \
+			libvorbis-devel \
+			freetype-devel \
+			libudev-devel \
+			mesa-libGL-devel \
+			libX11-devel \
+			libXrandr-devel \
+			libXcursor-devel \
+			libXinerama-devel \
+			libXi-devel \
+			zlib-devel \
+			libogg-devel \
+			libvorbisfile-devel \
+			libvorbisenc-devel; \
+	else \
+		echo "No supported package manager found."; \
+		exit 1; \
+	fi

@@ -1,0 +1,58 @@
+.cache/
+.idea/
+.vs/
+.vscode/
+build/
+cmake-build-*/
+CMakeUserPresets.json
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!cmake/**/*.cmake
+
+# Build directories
+build/
+bin/
+lib/
+*.o
+*.so
+*.a
+*.dll
+*.exe
+*.pc
+
+# SFML specific files
+*.pdb
+*.ilk
+*.obj
+*.lib
+*.dSYM/
+*.dSYM.zip
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+*.swp
+*.swo
+
+# Other files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.user
+*.sublime-settings
+*.sublime-project

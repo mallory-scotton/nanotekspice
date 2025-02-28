@@ -8,6 +8,7 @@
 #include "Specials/Output.hpp"
 #include <algorithm>
 #include <iostream>
+#include <unordered_set>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -128,6 +129,105 @@ void Circuit::display(void) const
 const Circuit::ComponentMap& Circuit::getComponents(void) const
 {
     return (m_components);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::draw(sf::RenderTarget& target)
+{
+    positionComponents();
+
+    for (const auto& [name, component] : m_components) {
+        component->draw(target);
+    }
+
+    drawLinks(target);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::drawLinks(sf::RenderTarget& target)
+{
+    std::unordered_set<std::string> drawnLinks;
+    sf::VertexArray lines(sf::PrimitiveType::Lines);
+
+    for (const auto& [name, component] : m_components) {
+        for (size_t i = 0; i < component->getPinCount(); i++) {
+
+            const Pin& pin = component->getPin(i);
+
+
+            if (pin.getType() == Pin::Type::OUTPUT) {
+                for (const auto& link : pin.getLinks()) {
+                    if (auto linkedComp = link.component.lock()) {
+                        std::string linkId = name + ":" + std::to_string(i) +
+                                             "->" + linkedComp->getName() + ":" +
+                                             std::to_string(link.pin);
+
+                        if (drawnLinks.find(linkId) == drawnLinks.end()) {
+                            sf::Vertex startVertex;
+                            startVertex.position = component->getPinPosition(i);
+                            startVertex.color = sf::Color::White;
+
+                            sf::Vertex endVertex;
+                            endVertex.position = linkedComp->getPinPosition(link.pin);
+                            endVertex.color = sf::Color::White;
+
+                            lines.append(startVertex);
+                            lines.append(endVertex);
+                            drawnLinks.insert(linkId);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    target.draw(lines);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Circuit::positionComponents(void)
+{
+    const float startX = 50.f;
+    const float startY = 50.f;
+    const float spacingX = 200.f;
+    const float spacingY = 150.f;
+
+    size_t row = 0;
+    size_t col = 0;
+    size_t maxCol = 4;
+
+    for (auto& [name, component] : m_components) {
+        if (!component->isPositionSet()) {
+            component->setPosition(
+                {startX + col * spacingX, startY + row * spacingY}
+            );
+
+            col++;
+            if (col >= maxCol) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+std::shared_ptr<nts::IComponent> Circuit::getComponentAt(
+    const sf::Vector2f& position
+)
+{
+    for (const auto& [name, component] : m_components) {
+        sf::Vector2f compPos = component->getPosition();
+        sf::Vector2f compSize = component->getSize();
+
+        sf::FloatRect bounds(compPos, compSize);
+
+        if (bounds.contains(position)) {
+            return (component);
+        }
+    }
+
+    return (nullptr);
 }
 
 } // namespace nts
