@@ -65,6 +65,7 @@ SOURCES				=	./Main.cpp \
 						./Components/C4017.cpp \
 						./Components/C4040.cpp \
 						./Components/C4069.cpp \
+						./Components/C4094.cpp \
 						./Components/QuadGate.cpp
 
 OBJECTS				=	$(SOURCES:.cpp=.o)
