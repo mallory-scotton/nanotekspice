@@ -2,7 +2,7 @@
 // Dependencies
 ///////////////////////////////////////////////////////////////////////////////
 #include "Shell/Shell.hpp"
-#include "Errors/ComponentException.hpp"
+#include "Errors/ParsingException.hpp"
 #include <iostream>
 
 #ifndef NTS_BONUS
@@ -19,8 +19,9 @@ int main(int argc, char* argv[])
         nts::Shell shell;
         shell.loadCircuit(argv[1]);
         shell.run();
-    } catch (const nts::ComponentException& e) {
+    } catch (const nts::ParsingException& e) {
         std::cerr << e.what() << std::endl;
+        return (84);
     } catch (const std::exception& e) {
         std::cerr << "Unexpected exception: " << e.what() << std::endl;
         return (84);
