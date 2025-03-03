@@ -428,12 +428,18 @@ void Circuit::draw(void) {
 
     if (m_showComponentNamePopup) {
         ImGui::OpenPopup("Component Name");
-        ImGui::SetNextWindowPos(ImGui::GetIO().DisplaySize / 2 - ImVec2(150, 150));
+        ImGui::SetNextWindowPos(ImGui::GetIO().DisplaySize / 2 -
+            ImVec2(150, 150));
         ImGui::SetNextWindowSize(ImVec2(300, 0));
     }
 
-    if (ImGui::BeginPopupModal("Component Name", &m_showComponentNamePopup, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("Enter a name for the new %s component:", m_pendingComponentType.c_str());
+    if (ImGui::BeginPopupModal(
+        "Component Name",
+        &m_showComponentNamePopup,
+        ImGuiWindowFlags_AlwaysAutoResize)
+    ) {
+        ImGui::Text("Enter a name for the new %s component:",
+                m_pendingComponentType.c_str());
 
         ImGui::InputText("##ComponentName", &m_pendingComponentName);
 
