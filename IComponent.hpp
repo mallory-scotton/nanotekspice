@@ -11,8 +11,6 @@
 #include <memory>
 #include <vector>
 
-#define NTS_BONUS
-
 #ifdef NTS_BONUS
     #define IMGUI_DEFINE_MATH_OPERATORS
     #include <imgui.h>
