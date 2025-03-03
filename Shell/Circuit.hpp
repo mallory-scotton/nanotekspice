@@ -39,6 +39,9 @@ private:
     PendingMap m_pendingInputs;     //<!
     ComponentMap m_components;      //<!
     size_t m_tick{0};               //<!
+#ifdef NTS_BONUS
+    int m_gotoTick = 1;             //<!
+#endif
 
 private:
     ///////////////////////////////////////////////////////////////////////////

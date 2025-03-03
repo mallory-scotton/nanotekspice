@@ -341,8 +341,23 @@ void Circuit::draw(void) {
 
         ImGui::Text("Current Tick: %lu", m_tick);
 
+        if (ImGui::InputInt("Tick Destination", &m_gotoTick)) {
+            if (m_gotoTick < (int)m_tick) {
+                m_gotoTick = (int)m_tick + 1;
+            }
+        }
+
         if (ImGui::Button("Simulate")) {
             simulate();
+            m_gotoTick = (int)m_tick + 1;
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Goto Simulate")) {
+            while (m_tick <= (size_t)m_gotoTick) {
+                simulate();
+            }
         }
     }
 
