@@ -3,7 +3,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Shell.hpp"
 #include "Parser.hpp"
+#include "Pin.hpp"
 #include <signal.h>
+#include <vector>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -31,6 +33,68 @@ void Shell::loadCircuit(const std::string& filename)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void Shell::displayDebugInfo(void)
+{
+    std::cout << "===== Circuit Debug Information =====" << std::endl;
+    std::cout << "Components: "
+              << m_circuit.getComponents().size() << std::endl;
+
+    for (const auto& [name, component] : m_circuit.getComponents()) {
+        std::cout << "\n[Component] " << name << std::endl;
+
+        if (!component) {
+            std::cout << "  WARNING: Null component" << std::endl;
+            continue;
+        }
+
+        std::vector<Pin>& pins = component->getPins();
+        std::cout << "  Pin count: " << pins.size() << std::endl;
+
+        for (size_t i = 0; i < pins.size(); i++) {
+            Pin& pin = pins[i];
+            std::string typeStr;
+
+            switch (pin.getType()) {
+                case Pin::Type::INPUT:     typeStr = "INPUT"; break;
+                case Pin::Type::OUTPUT:    typeStr = "OUTPUT"; break;
+                case Pin::Type::ELECTRICAL: typeStr = "ELECTRICAL"; break;
+                default:                   typeStr = "UNKNOWN"; break;
+            }
+
+            std::string stateStr;
+            switch (pin.getState()) {
+                case Tristate::True:       stateStr = "TRUE (1)"; break;
+                case Tristate::False:      stateStr = "FALSE (0)"; break;
+                case Tristate::Undefined:  stateStr = "UNDEFINED (U)"; break;
+                default:                   stateStr = "INVALID"; break;
+            }
+
+            std::cout << "  Pin " << i
+                      << " [" << typeStr << "] State: "
+                      << stateStr << std::endl;
+
+            const auto& links = pin.getLinks();
+            if (links.empty()) {
+                std::cout << "    No links" << std::endl;
+            } else {
+                std::cout << "    Links (" << links.size()
+                          << "):" << std::endl;
+                for (const auto& link : links) {
+                    if (auto linkedComponent = link.component.lock()) {
+                        std::cout << "      -> " << linkedComponent->getName()
+                                  << " (pin " << link.pin << ")" << std::endl;
+                    } else {
+                        std::cout << "      -> EXPIRED LINK" << std::endl;
+                    }
+                }
+            }
+        }
+    }
+
+    std::cout << "\n===== End Debug Information =====" << std::endl;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void Shell::processCommand(const std::string& command)
 {
     if (command.empty()) return;
@@ -39,6 +103,7 @@ void Shell::processCommand(const std::string& command)
     if (command == "display")   { m_circuit.display(); return; }
     if (command == "simulate")  { m_circuit.simulate(); return; }
     if (command == "loop")      { runLoop(); return; }
+    if (command == "debug")     { displayDebugInfo(); return; }
 
     size_t equalPos = command.find('=');
     if (equalPos != std::string::npos) {
