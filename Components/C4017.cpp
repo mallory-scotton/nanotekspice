@@ -81,7 +81,7 @@ Tristate C4017::decoder(size_t pin)
     bool bit_4 = m_flip_flops[3]->compute(4) == Tristate::True ? True : False;
     bool bit_5 = m_flip_flops[4]->compute(4) == Tristate::True ? True : False;
 
-    if (pin == 0 && (bit_1 && bit_2 && bit_3 && bit_4 && bit_5)) // count 5
+    if ((pin == 0 || pin == 11) && (bit_1 && bit_2 && bit_3 && bit_4 && bit_5)) // count 5
         return Tristate::True;
     if (pin == 1 && (bit_1 && !bit_2 && !bit_3 && !bit_4 && !bit_5)) // count 1
         return Tristate::True;
@@ -89,17 +89,17 @@ Tristate C4017::decoder(size_t pin)
         return Tristate::True;
     if (pin == 3 && (bit_1 && bit_2 && !bit_3 && !bit_4 && !bit_5)) // count 2
         return Tristate::True;
-    if (pin == 4 && (!bit_1 && bit_2 && bit_3 && bit_4 && bit_5)) // count 6
+    if ((pin == 4 || pin == 11) && (!bit_1 && bit_2 && bit_3 && bit_4 && bit_5)) // count 6
         return Tristate::True;
-    if (pin == 5 && (!bit_1 && !bit_2 && bit_3 && bit_4 && bit_5)) // count 7
+    if ((pin == 5 || pin == 11) && (!bit_1 && !bit_2 && bit_3 && bit_4 && bit_5)) // count 7
         return Tristate::True;
     if (pin == 6 && (bit_1 && bit_2 && bit_3 && !bit_4 && !bit_5)) // count 3
         return Tristate::True;
-    if (pin == 8 && (!bit_1 && !bit_2 && !bit_3 && bit_4 && bit_5)) // count 8
+    if ((pin == 8 || pin == 11) && (!bit_1 && !bit_2 && !bit_3 && bit_4 && bit_5)) // count 8
         return Tristate::True;
     if (pin == 9 && (bit_1 && bit_2 && bit_3 && bit_4 && !bit_5)) // count 4
         return Tristate::True;
-    if (pin == 10 && (!bit_1 && !bit_2 && !bit_3 && !bit_4 && bit_5)) // count 9
+    if ((pin == 10 || pin == 11) && (!bit_1 && !bit_2 && !bit_3 && !bit_4 && bit_5)) // count 9
         return Tristate::True;
     return Tristate::False;
 }
@@ -148,7 +148,7 @@ void C4017::simulate(size_t tick)
     m_flip_flops[1]->simulate(tick);
     m_flip_flops[0]->simulate(tick);
 
-    for (size_t pin : {1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12}) {
+    for (size_t pin : {0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11}) {
         propagateOutput(pin, compute(pin));
     }
 }
