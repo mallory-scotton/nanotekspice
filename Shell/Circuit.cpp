@@ -448,7 +448,7 @@ void Circuit::draw(void) {
                 if (aComponent) {
                     aComponent->m_position = m_lastMousePos;
                 }
-                
+
                 ImNodes::AutoPositionNode(aComponent);
                 m_showComponentNamePopup = false;
                 ImGui::CloseCurrentPopup();
@@ -499,6 +499,29 @@ void Circuit::draw(void) {
     ImGui::End();
 
     ImGui::End();
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Delete)) {
+        std::vector<std::string> componentsToDelete;
+
+        for (const auto& [name, component] : m_components) {
+            if (component->isSelected()) {
+                componentsToDelete.push_back(name);
+            }
+        }
+
+        for (const auto& name : componentsToDelete) {
+            auto component = m_components[name];
+            auto* aComponent = dynamic_cast<AComponent*>(component.get());
+            if (aComponent) {
+                auto& pins = aComponent->getPins();
+                for (auto& pin : pins) {
+                    pin.clearLinks();
+                }
+            }
+
+            m_components.erase(name);
+        }
+    }
 }
 
 #endif
