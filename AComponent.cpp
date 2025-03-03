@@ -146,6 +146,8 @@ void AComponent::applyColors(const std::string& cls) const
 
     if (cls == "Input" || cls == "Output" || cls == "Clock") {
         color = rgb(124, 29, 144);
+    } else if (cls == "True" || cls == "False") {
+        color = rgb(90, 120, 87);
     } else if (
         cls == "Or" || cls == "Xor" || cls == "And" ||
         cls == "Nand" || cls == "Nor" || cls == "Not"
