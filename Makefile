@@ -68,7 +68,17 @@ SOURCES				=	./Main.cpp \
 						./Components/C4094.cpp \
 						./Components/QuadGate.cpp
 
+BONUS_SOURCES		=	./Bonus/Bonus.cpp \
+						./External/ImGui/imgui_draw.cpp \
+						./External/ImGui/imgui_tables.cpp \
+						./External/ImGui/imgui_widgets.cpp \
+						./External/ImGui/imgui-SFML.cpp \
+						./External/ImGui/imgui.cpp \
+						./External/ImGui/ImNodes.cpp \
+						./External/ImGui/ImNodesEz.cpp
+
 OBJECTS				=	$(SOURCES:.cpp=.o)
+BONUS_OBJECTS		=	$(BONUS_SOURCES:.cpp=.o)
 
 EXTERNAL_LIBS		=	-IExternal/SFML/include \
 						-IExternal/ImGui \
@@ -117,10 +127,11 @@ external:
 	$(SFML_COMPILATION)
 
 bonus: CXXFLAGS	+=	$(EXTERNAL_LIBS) -DNTS_BONUS
-bonus: external build
+bonus: SOURCES += $(BONUS_SOURCES)
+bonus: external $(BONUS_OBJECTS) build
 
 clean:
-	rm -rf $(OBJECTS)
+	rm -rf $(OBJECTS) $(BONUS_OBJECTS)
 
 fclean: clean
 	rm -f $(TARGET)
