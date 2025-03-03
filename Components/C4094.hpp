@@ -23,9 +23,9 @@ private:
     ///////////////////////////////////////////////////////////////////////////
     // Internal counter logic
     ///////////////////////////////////////////////////////////////////////////
+    Tristate m_lastClock;
     uint8_t m_shiftRegister;
     uint8_t m_storageRegister;
-    Tristate m_lastClock;
     Tristate m_lastStrobe;
     Tristate m_serialOut;
 
