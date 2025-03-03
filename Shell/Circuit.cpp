@@ -244,7 +244,9 @@ void Circuit::draw(void) {
 
     ImGuiWindowFlags blueprint_flags =
         ImGuiWindowFlags_NoScrollbar |
-        ImGuiWindowFlags_NoScrollWithMouse;
+        ImGuiWindowFlags_NoScrollWithMouse |
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoCollapse;
 
     ImGui::Begin("Blueprint", nullptr, blueprint_flags);
 
@@ -329,6 +331,22 @@ void Circuit::draw(void) {
     }
 
     Ez::EndCanvas();
+
+    ImGui::Begin("Property Editor");
+
+    if (ImGui::CollapsingHeader("Simulation")) {
+        ImGui::Text("Components: %lu", m_components.size());
+
+        ImGui::Separator();
+
+        ImGui::Text("Current Tick: %lu", m_tick);
+
+        if (ImGui::Button("Simulate")) {
+            simulate();
+        }
+    }
+
+    ImGui::End();
 
     ImGui::End();
 }
