@@ -5,6 +5,18 @@
 #include "Errors/OutOfRangePinException.hpp"
 #include <set>
 #include <queue>
+#include <string>
+#include <algorithm>
+
+#ifdef NTS_BONUS
+    #include <cxxabi.h>
+    #include <typeinfo>
+    #include <typeindex>
+    #include <unordered_map>
+    #include <cmath>
+    #include <random>
+    #include <imgui.h>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -102,144 +114,123 @@ std::vector<Pin>& AComponent::getPins(void)
 #ifdef NTS_BONUS
 
 ///////////////////////////////////////////////////////////////////////////////
-size_t AComponent::getPinCount(void) const
+std::string AComponent::getCleanClassName(void) const
 {
-    return (m_pins.size());
+    const char* name = typeid(*this).name();
+    int status = 0;
+    char* demangled = abi::__cxa_demangle(name, nullptr, nullptr, &status);
+    std::string cleaned(demangled);
+    std::free(demangled);
+    size_t pos = cleaned.rfind("::");
+    if (pos != std::string::npos) {
+        cleaned.erase(0, pos + 2);
+    }
+    return (cleaned);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-const Pin& AComponent::getPin(size_t idx) const
+bool AComponent::isSelected(void) const
 {
-    return (m_pins[idx]);
+    return (m_selected);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void AComponent::setPosition(const sf::Vector2f& position)
-{
-    m_position = position;
-    m_positionSet = true;
-
-    updatePinPositions();
-}
+#define rgb(r, g, b) ImVec4(r / 255.f, g / 255.f, b / 255.f, 1.f)
 
 ///////////////////////////////////////////////////////////////////////////////
-sf::Vector2f AComponent::getPosition(void) const
+void AComponent::applyColors(const std::string& cls) const
 {
-    return (m_position);
-}
+    ImVec4 color = rgb(70, 70, 70);
+    ImVec4 accent = rgb(10, 10, 10);
+    ImVec4 accent2 = rgb(20, 20, 20);
 
-///////////////////////////////////////////////////////////////////////////////
-sf::Vector2f AComponent::getSize(void) const
-{
-    return (m_size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-sf::Vector2f AComponent::getPinPosition(size_t pin) const
-{
-    if (pin >= m_pinPositions.size())
-        return (m_position);
-    return (m_pinPositions[pin]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-bool AComponent::isPositionSet(void) const
-{
-    return (m_positionSet);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void AComponent::updatePinPositions(void)
-{
-    size_t inputCount = 0;
-    size_t outputCount = 0;
-
-    for (const auto& pin : m_pins) {
-        if (pin.getType() == Pin::Type::INPUT)
-            inputCount++;
-        else if (pin.getType() == Pin::Type::OUTPUT)
-            outputCount++;
+    if (cls == "Input" || cls == "Output" || cls == "Clock") {
+        color = rgb(124, 29, 144);
+    } else if (
+        cls == "Or" || cls == "Xor" || cls == "And" ||
+        cls == "Nand" || cls == "Nor" || cls == "Not"
+    ) {
+        color = rgb(74, 115, 143);
+    } else if (cls[0] == 'C') {
+        color = rgb(128, 21, 20);
     }
 
-    float height = std::max(inputCount, outputCount) * 20.f + 40.f;
-    m_size = {150.f, height};
-
-    m_pinPositions.resize(m_pins.size());
-
-    size_t inputIdx = 0;
-    size_t outputIdx = 0;
-    size_t electricalIdx = 0;
-
-    for (size_t i = 0; i < m_pins.size(); i++) {
-        const Pin& pin = m_pins[i];
-
-        if (pin.getType() == Pin::Type::INPUT) {
-            float y = m_position.y + 30.f + inputIdx * 20.f;
-            m_pinPositions[i] = {m_position.x, y};
-            inputIdx++;
-        } else if (pin.getType() == Pin::Type::OUTPUT) {
-            float y = m_position.y + 30.f + outputIdx * 20.f;
-            m_pinPositions[i] = {m_position.x + m_size.x, y};
-            outputIdx++;
-        } else {
-            float x = m_position.x + 40.f + electricalIdx * 20.f;
-            m_pinPositions[i] = {x, m_position.y + m_size.y};
-            electricalIdx++;
-        }
-    }
+    Ez::PushStyleColor(ImNodesStyleCol_NodeTitleBarBg, color);
+    Ez::PushStyleColor(ImNodesStyleCol_NodeTitleBarBgHovered, color + accent);
+    Ez::PushStyleColor(ImNodesStyleCol_NodeTitleBarBgActive, color + accent2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void AComponent::draw(sf::RenderTarget& target) const
+void AComponent::draw(void)
 {
-    sf::RectangleShape body;
-    body.setPosition(m_position);
-    body.setSize(m_size);
-    body.setFillColor(sf::Color(50, 50, 50));
-    body.setOutlineThickness(2.f);
-    body.setOutlineColor(sf::Color(20, 20, 20));
-    target.draw(body);
+    if (!m_pinsInitialized) {
+        m_inputs.clear();
+        m_outputs.clear();
+        m_pinLabels.clear();
 
-    static sf::Font font("segoe-ui.ttf");
-    sf::Text text(font, m_name, 14);
+        m_pinLabels.reserve(m_pins.size());
 
-    text.setOrigin(text.getGlobalBounds().size / 2.f);
+        for (size_t i = 0; i < m_pins.size(); i++) {
+            Pin::Type type = m_pins[i].getType();
 
-    text.setPosition({
-        m_position.x + (m_size.x / 2.f),
-        m_position.y + 5.f}
-    );
-    text.setFillColor(sf::Color::White);
-    target.draw(text);
+            if (type == Pin::Type::ELECTRICAL)
+                continue;
 
-    for (size_t i = 0; i < m_pins.size(); i++) {
-        const Pin& pin = m_pins[i];
-        sf::CircleShape pinShape(5.f);
-        pinShape.setPosition(m_pinPositions[i] - sf::Vector2f(5.f, 5.f));
+            m_pinLabels.push_back(std::to_string(i));
 
-        sf::Color pinColor;
-        switch (pin.getState()) {
-            case Tristate::True:
-                pinColor = sf::Color::Green;
-                break;
-            case Tristate::False:
-                pinColor = sf::Color::Red;
-                break;
-            case Tristate::Undefined:
-                pinColor = sf::Color::Yellow;
-                break;
+            if (type == Pin::Type::INPUT) {
+                m_inputs.push_back((Ez::SlotInfo){
+                    m_pinLabels.back().c_str(), 1
+                });
+            } else if (type == Pin::Type::OUTPUT) {
+                m_outputs.push_back((Ez::SlotInfo){
+                    m_pinLabels.back().c_str(), 1
+                });
+            }
         }
 
-        pinShape.setFillColor(pinColor);
-        pinShape.setOutlineThickness(1.f);
-        pinShape.setOutlineColor(sf::Color::Black);
-        target.draw(pinShape);
-
-        sf::Text pinText(font, std::to_string(i), 10);
-        pinText.setPosition(m_pinPositions[i] + sf::Vector2f(6.f, -10.f));
-        pinText.setFillColor(sf::Color::White);
-        target.draw(pinText);
+        m_pinsInitialized = true;
     }
+
+    std::string cls = getCleanClassName();
+    std::string name = m_name + " (" + cls + ")";
+
+    applyColors(cls);
+
+    if (Ez::BeginNode(this, name.c_str(), &m_position, &m_selected)) {
+        if (cls == "Input" || cls == "Clock") {
+            int state = (int)compute(0);
+            ImGui::Text("%s", state == -1 ?
+                "Undefined" : state == 0 ? "False" : "True");
+        }
+
+        Ez::InputSlots(m_inputs.data(), m_inputs.size());
+
+        if (cls == "Output") {
+            int state = (int)compute(0);
+            ImGui::Text("%s", state == -1 ?
+                "Undefined" : state == 0 ? "False" : "True");
+        }
+
+        Ez::OutputSlots(m_outputs.data(), m_outputs.size());
+    }
+
+    for (size_t i = 0; i < m_pins.size(); i++) {
+        if (m_pins[i].getType() != Pin::Type::INPUT)
+            continue;
+        for (auto& link : m_pins[i].getLinks()) {
+            ImNodes::Connection(
+                this,
+                std::to_string(i).c_str(),
+                link.component.lock().get(),
+                std::to_string(link.pin).c_str()
+            );
+        }
+    }
+
+    Ez::EndNode();
+
+    Ez::PopStyleColor(3);
 }
 
 #endif

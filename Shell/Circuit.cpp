@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <iostream>
 #include <unordered_set>
+#include <queue>
+#include <set>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -134,48 +136,71 @@ const Circuit::ComponentMap& Circuit::getComponents(void) const
 #ifdef NTS_BONUS
 
 ///////////////////////////////////////////////////////////////////////////////
-void Circuit::draw(sf::RenderTarget& target)
-{
-    positionComponents();
+void Circuit::initializePosition(void) {
+    const float HORIZONTAL_SPACING = 250.0f;
+    const float VERTICAL_SPACING = 120.0f;
+
+    std::vector<std::shared_ptr<IComponent>> inputComponents;
+    std::set<std::shared_ptr<IComponent>> processedComponents;
 
     for (const auto& [name, component] : m_components) {
-        component->draw(target);
+        bool hasInputConnection = false;
+
+        auto* aComponent = dynamic_cast<AComponent*>(component.get());
+        if (aComponent) {
+            auto& pins = aComponent->getPins();
+            for (size_t i = 0; i < pins.size(); i++) {
+                if (pins[i].getType() == nts::Pin::Type::INPUT &&
+                    !pins[i].getLinks().empty()) {
+                    hasInputConnection = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasInputConnection) {
+            inputComponents.push_back(component);
+            processedComponents.insert(component);
+        }
     }
 
-    drawLinks(target);
-}
+    std::unordered_map<std::shared_ptr<IComponent>, int> componentLevels;
+    std::unordered_map<int, std::vector<std::shared_ptr<IComponent>>>
+        levelToComponents;
 
-///////////////////////////////////////////////////////////////////////////////
-void Circuit::drawLinks(sf::RenderTarget& target)
-{
-    std::unordered_set<std::string> drawnLinks;
-    sf::VertexArray lines(sf::PrimitiveType::Lines);
+    for (auto& component : inputComponents) {
+        componentLevels[component] = 0;
+        levelToComponents[0].push_back(component);
+    }
 
-    for (const auto& [name, component] : m_components) {
-        for (size_t i = 0; i < component->getPinCount(); i++) {
+    std::queue<std::shared_ptr<IComponent>> queue;
+    for (auto& component : inputComponents) {
+        queue.push(component);
+    }
 
-            const Pin& pin = component->getPin(i);
+    while (!queue.empty()) {
+        auto current = queue.front();
+        queue.pop();
 
+        int currentLevel = componentLevels[current];
 
-            if (pin.getType() == Pin::Type::OUTPUT) {
-                for (const auto& link : pin.getLinks()) {
-                    if (auto linkedComp = link.component.lock()) {
-                        std::string linkId = name + ":" + std::to_string(i) +
-                                             "->" + linkedComp->getName() + ":" +
-                                             std::to_string(link.pin);
+        auto* aComponent = dynamic_cast<AComponent*>(current.get());
+        if (aComponent) {
+            auto& pins = aComponent->getPins();
+            for (size_t i = 0; i < pins.size(); i++) {
+                if (pins[i].getType() != nts::Pin::Type::OUTPUT) continue;
 
-                        if (drawnLinks.find(linkId) == drawnLinks.end()) {
-                            sf::Vertex startVertex;
-                            startVertex.position = component->getPinPosition(i);
-                            startVertex.color = sf::Color::White;
+                for (auto& link : pins[i].getLinks()) {
+                    if (auto connectedComp = link.component.lock()) {
+                        if (processedComponents.find(connectedComp) ==
+                            processedComponents.end()) {
+                            int nextLevel = currentLevel + 1;
+                            componentLevels[connectedComp] = nextLevel;
+                            levelToComponents[nextLevel].push_back(
+                                connectedComp);
 
-                            sf::Vertex endVertex;
-                            endVertex.position = linkedComp->getPinPosition(link.pin);
-                            endVertex.color = sf::Color::White;
-
-                            lines.append(startVertex);
-                            lines.append(endVertex);
-                            drawnLinks.insert(linkId);
+                            processedComponents.insert(connectedComp);
+                            queue.push(connectedComp);
                         }
                     }
                 }
@@ -183,53 +208,129 @@ void Circuit::drawLinks(sf::RenderTarget& target)
         }
     }
 
-    target.draw(lines);
-}
+    int maxLevel = 0;
+    for (const auto& [level, comps] : levelToComponents) {
+        maxLevel = std::max(maxLevel, level);
+    }
 
-///////////////////////////////////////////////////////////////////////////////
-void Circuit::positionComponents(void)
-{
-    const float startX = 50.f;
-    const float startY = 50.f;
-    const float spacingX = 200.f;
-    const float spacingY = 150.f;
+    for (const auto& [name, component] : m_components) {
+        if (processedComponents.find(component) == processedComponents.end()) {
+            componentLevels[component] = maxLevel + 1;
+            levelToComponents[maxLevel + 1].push_back(component);
+        }
+    }
 
-    size_t row = 0;
-    size_t col = 0;
-    size_t maxCol = 4;
+    for (const auto& [level, components] : levelToComponents) {
+        float x = 100.0f + level * HORIZONTAL_SPACING;
 
-    for (auto& [name, component] : m_components) {
-        if (!component->isPositionSet()) {
-            component->setPosition(
-                {startX + col * spacingX, startY + row * spacingY}
-            );
+        for (size_t i = 0; i < components.size(); i++) {
+            float y = 100.0f + i * VERTICAL_SPACING;
 
-            col++;
-            if (col >= maxCol) {
-                col = 0;
-                row++;
+            auto* aComponent = dynamic_cast<AComponent*>(components[i].get());
+            if (aComponent) {
+                aComponent->m_position = ImVec2(x, y);
             }
         }
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-std::shared_ptr<nts::IComponent> Circuit::getComponentAt(
-    const sf::Vector2f& position
-)
-{
+void Circuit::draw(void) {
+    static bool initialized = false;
+    if (!initialized) {
+        initializePosition();
+        initialized = true;
+    }
+
+    ImGuiWindowFlags blueprint_flags =
+        ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoScrollWithMouse;
+
+    ImGui::Begin("Blueprint", nullptr, blueprint_flags);
+
+    Ez::BeginCanvas();
     for (const auto& [name, component] : m_components) {
-        sf::Vector2f compPos = component->getPosition();
-        sf::Vector2f compSize = component->getSize();
+        component->draw();
+    }
 
-        sf::FloatRect bounds(compPos, compSize);
-
-        if (bounds.contains(position)) {
-            return (component);
+    bool oneSelected = false;
+    for (const auto& [name, component] : m_components) {
+        std::string cls = component->getCleanClassName();
+        if (cls != "Input" && cls != "Clock")
+            continue;
+        if (component->isSelected()) {
+            oneSelected = true;
+            break;
         }
     }
 
-    return (nullptr);
+    Circuit::ComponentMap selected;
+    for (const auto& [name, component] : m_components) {
+        std::string cls = component->getCleanClassName();
+        if (cls != "Input" && cls != "Clock")
+            continue;
+        if ((oneSelected && component->isSelected()) || !oneSelected) {
+            selected[name] = component;
+        }
+    }
+
+    if (
+        ImGui::IsMouseReleased(1) &&
+        ImGui::IsWindowHovered() &&
+        !ImGui::IsMouseDragging(1)
+    )
+    {
+        ImGui::FocusWindow(ImGui::GetCurrentWindow());
+        ImGui::OpenPopup("NodesContextMenu");
+    }
+
+    if (ImGui::BeginPopup("NodesContextMenu")) {
+        if (oneSelected && ImGui::MenuItem("Set True")) {
+            for (auto& [name, cmp] : selected) {
+                auto input = std::dynamic_pointer_cast<Specials::Input>(cmp);
+                auto clock = std::dynamic_pointer_cast<Specials::Clock>(cmp);
+
+                if (input) input->setValue(Tristate::True);
+                if (clock) clock->setValue(Tristate::True);
+            }
+        }
+
+        if (oneSelected && ImGui::MenuItem("Set False")) {
+            for (auto& [name, cmp] : selected) {
+                auto input = std::dynamic_pointer_cast<Specials::Input>(cmp);
+                auto clock = std::dynamic_pointer_cast<Specials::Clock>(cmp);
+
+                if (input) input->setValue(Tristate::False);
+                if (clock) clock->setValue(Tristate::False);
+            }
+        }
+
+        if (oneSelected && ImGui::MenuItem("Set Undefined")) {
+            for (auto& [name, cmp] : selected) {
+                auto input = std::dynamic_pointer_cast<Specials::Input>(cmp);
+                auto clock = std::dynamic_pointer_cast<Specials::Clock>(cmp);
+
+                if (input) input->setValue(Tristate::Undefined);
+                if (clock) clock->setValue(Tristate::Undefined);
+            }
+        }
+
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Reset Zoom")) {
+            ImNodes::GetCurrentCanvas()->Zoom = 1;
+        }
+
+        if (ImGui::IsAnyMouseDown() && !ImGui::IsWindowHovered()) {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+
+    Ez::EndCanvas();
+
+    ImGui::End();
 }
 
 #endif
