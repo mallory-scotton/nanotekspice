@@ -14,7 +14,7 @@ namespace nts::Sequencials
 FlipFlop::FlipFlop(const std::string& name)
     : AComponent(name, 6)
     , m_lastClock(Tristate::Undefined)
-    , m_state(Tristate::Undefined)
+    , m_state(Tristate::False)
 {
     m_pins[0] = Pin(Pin::Type::INPUT);      // Clock
     m_pins[1] = Pin(Pin::Type::INPUT);      // Data
@@ -43,14 +43,15 @@ void FlipFlop::simulate(size_t tick)
         return;
     AComponent::simulate(tick);
 
+
     Tristate clock = getInputState(0);
     Tristate data = getInputState(1);
     Tristate set = getInputState(2);
     Tristate reset = getInputState(3);
 
-    if (set == Tristate::True && reset == Tristate::False) {
+    if (set == Tristate::True && reset != Tristate::True) {
         m_state = Tristate::True;
-    } else if (reset == Tristate::True && set == Tristate::False) {
+    } else if (reset == Tristate::True && set != Tristate::True) {
         m_state = Tristate::False;
     } else if (set == Tristate::True && reset == Tristate::True) {
         m_state = Tristate::Undefined;
