@@ -30,7 +30,8 @@ Tristate Counter::compute(size_t pin)
     if (pin == 2)
         return static_cast<Tristate>(m_count % 2);
     if (pin == 3)
-        return static_cast<Tristate>(m_count == 9 ? Tristate::True : Tristate::False);
+        return static_cast<Tristate>(m_count == 9 ?
+            Tristate::True : Tristate::False);
     return getInputState(pin);
 }
 
