@@ -32,6 +32,7 @@ private:
     sf::Clock m_clock;                      //<!
     sf::RenderWindow m_window;              //<!
     Circuit m_circuit;                      //<!
+    std::vector<std::string> m_files;       //<!
 
 public:
     ///////////////////////////////////////////////////////////////////////////

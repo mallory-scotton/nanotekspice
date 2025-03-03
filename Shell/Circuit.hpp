@@ -41,6 +41,11 @@ private:
     size_t m_tick{0};               //<!
 #ifdef NTS_BONUS
     int m_gotoTick = 1;             //<!
+    bool m_initialized = false;     //<!
+    bool m_showComponentNamePopup = false;
+    std::string m_pendingComponentType;
+    std::string m_pendingComponentName;
+    ImVec2 m_lastMousePos;
 #endif
 
 private:
@@ -122,6 +127,12 @@ public:
     const ComponentMap& getComponents(void) const;
 
 #ifdef NTS_BONUS
+    ///////////////////////////////////////////////////////////////////////////
+    /// \brief
+    ///
+    ///////////////////////////////////////////////////////////////////////////
+    void clear(void);
+
     ///////////////////////////////////////////////////////////////////////////
     /// \brief
     ///

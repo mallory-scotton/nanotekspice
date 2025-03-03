@@ -221,12 +221,16 @@ void AComponent::draw(void)
         if (m_pins[i].getType() != Pin::Type::INPUT)
             continue;
         for (auto& link : m_pins[i].getLinks()) {
-            ImNodes::Connection(
-                this,
-                std::to_string(i).c_str(),
-                link.component.lock().get(),
-                std::to_string(link.pin).c_str()
-            );
+            if (auto other = link.component.lock()) {
+                if (!ImNodes::Connection(
+                    this,
+                    std::to_string(i).c_str(),
+                    other.get(),
+                    std::to_string(link.pin).c_str()
+                )) {
+                    m_pins[i].removeLink(other, link.pin);
+                }
+            }
         }
     }
 

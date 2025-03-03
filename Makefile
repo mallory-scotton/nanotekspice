@@ -72,6 +72,7 @@ BONUS_SOURCES		=	./Bonus/Bonus.cpp \
 						./External/ImGui/imgui_draw.cpp \
 						./External/ImGui/imgui_tables.cpp \
 						./External/ImGui/imgui_widgets.cpp \
+						./External/ImGui/imgui_stdlib.cpp \
 						./External/ImGui/imgui-SFML.cpp \
 						./External/ImGui/imgui.cpp \
 						./External/ImGui/ImNodes.cpp \

@@ -2,6 +2,7 @@
 // Dependencies
 ///////////////////////////////////////////////////////////////////////////////
 #include "Pin.hpp"
+#include <algorithm>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -31,6 +32,25 @@ Tristate Pin::getState(void) const
 void Pin::addLink(const std::shared_ptr<IComponent>& component, size_t pin)
 {
     m_links.emplace_back(component, pin);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void Pin::removeLink(const std::shared_ptr<IComponent>& component, size_t pin)
+{
+    auto it = std::find_if(m_links.begin(), m_links.end(),
+        [&component, pin](const Link& link) {
+            auto linkComponent = link.component.lock();
+            return (
+                linkComponent &&
+                linkComponent == component &&
+                link.pin == pin
+            );
+        }
+    );
+
+    if (it != m_links.end()) {
+        m_links.erase(it);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

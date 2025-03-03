@@ -11,6 +11,11 @@
 #include <unordered_set>
 #include <queue>
 #include <set>
+#include <map>
+#include <vector>
+#ifdef NTS_BONUS
+#include <imgui_stdlib.h>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -136,6 +141,16 @@ const Circuit::ComponentMap& Circuit::getComponents(void) const
 #ifdef NTS_BONUS
 
 ///////////////////////////////////////////////////////////////////////////////
+void Circuit::clear(void)
+{
+    m_components.clear();
+    m_gotoTick = 1;
+    m_tick = 0;
+    m_pendingInputs.clear();
+    m_initialized = false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void Circuit::initializePosition(void) {
     const float HORIZONTAL_SPACING = 250.0f;
     const float VERTICAL_SPACING = 120.0f;
@@ -235,11 +250,65 @@ void Circuit::initializePosition(void) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+static const std::map<
+    std::string,
+    std::map<std::string, std::string>
+> RegisteredComponents = {
+    {
+        "Gates",
+        {
+            {"AND", "and"},
+            {"NAND", "nand"},
+            {"XOR", "xor"},
+            {"NOR", "nor"},
+            {"OR", "or"},
+            {"NOT", "not"}
+        }
+    },
+    {
+        "Specials",
+        {
+            {"Input", "input"},
+            {"Output", "output"},
+            {"Clock", "clock"},
+            {"True", "true"},
+            {"False", "false"}
+        }
+    },
+    {
+        "Components",
+        {
+            {"C4001 | Four NOR Gates", "4001"},
+            {"C4011 | Four NAND Gates", "4011"},
+            {"C4030 | Four XOR Gates", "4030"},
+            {"C4071 | Four OR Gates", "4071"},
+            {"C4081 | Four AND Gates", "4081"},
+            {"C4069 | Six INVERTER Gates", "4069"},
+            {"C4008 | 4 bits adder", "4008"},
+            {"C4013 | Dual Flip Flop", "4013"},
+            {"C4017 | 10 bits Johnson decade", "4017"},
+            {"C4040 | 12 bits counter", "4040"},
+            {"C4094 | 8 bits shift register", "4094"},
+            {"C4513 | 8 channel data selector", "4513"},
+            {"C4514 | 4 bits decoder", "4514"},
+            {"C4801 | Random access memory", "4801"},
+            {"C2716 | Read only memory", "2716"}
+        }
+    },
+    {
+        "Sequencials",
+        {
+            {"FlipFlop", "flipflop"},
+            {"Counter", "counter"}
+        }
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
 void Circuit::draw(void) {
-    static bool initialized = false;
-    if (!initialized) {
+    if (!m_initialized) {
         initializePosition();
-        initialized = true;
+        m_initialized = true;
     }
 
     ImGuiWindowFlags blueprint_flags =
@@ -253,6 +322,21 @@ void Circuit::draw(void) {
     Ez::BeginCanvas();
     for (const auto& [name, component] : m_components) {
         component->draw();
+    }
+
+    {
+        IComponent* inNode;
+        IComponent* outNode;
+        const char* inSlot;
+        const char* outSlot;
+
+        if (ImNodes::GetNewConnection(
+            (void**)&inNode, &inSlot, (void**)&outNode, &outSlot)
+        ) {
+            size_t in = (size_t)std::atol(inSlot);
+            size_t out = (size_t)std::atol(outSlot);
+            setLink(inNode->getName(), in, outNode->getName(), out);
+        }
     }
 
     bool oneSelected = false;
@@ -317,13 +401,64 @@ void Circuit::draw(void) {
             }
         }
 
+        if (!oneSelected) {
+            for (const auto& [menu, cmps] : RegisteredComponents) {
+                if (ImGui::BeginMenu(menu.c_str())) {
+                    for (const auto& [name, idx] : cmps) {
+                        if (ImGui::MenuItem(name.c_str())) {
+                            m_pendingComponentType = idx;
+                            m_pendingComponentName = idx + "_" +
+                                std::to_string(m_components.size());
+                            m_showComponentNamePopup = true;
+                        }
+                    }
+                    ImGui::EndMenu();
+                }
+            }
+        }
+
         ImGui::Separator();
 
         if (ImGui::MenuItem("Reset Zoom")) {
             ImNodes::GetCurrentCanvas()->Zoom = 1;
         }
 
-        if (ImGui::IsAnyMouseDown() && !ImGui::IsWindowHovered()) {
+        ImGui::EndPopup();
+    }
+
+    if (m_showComponentNamePopup) {
+        ImGui::OpenPopup("Component Name");
+        ImGui::SetNextWindowPos(ImGui::GetIO().DisplaySize / 2 - ImVec2(150, 150));
+        ImGui::SetNextWindowSize(ImVec2(300, 0));
+    }
+
+    if (ImGui::BeginPopupModal("Component Name", &m_showComponentNamePopup, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("Enter a name for the new %s component:", m_pendingComponentType.c_str());
+
+        ImGui::InputText("##ComponentName", &m_pendingComponentName);
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Create", ImVec2(120, 0))) {
+            try {
+                addComponent(m_pendingComponentType, m_pendingComponentName);
+
+                auto component = getComponent(m_pendingComponentName);
+                auto* aComponent = dynamic_cast<AComponent*>(component.get());
+                if (aComponent) {
+                    aComponent->m_position = m_lastMousePos;
+                }
+                
+                ImNodes::AutoPositionNode(aComponent);
+                m_showComponentNamePopup = false;
+                ImGui::CloseCurrentPopup();
+            } catch (const ComponentException&) {}
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) {
+            m_showComponentNamePopup = false;
             ImGui::CloseCurrentPopup();
         }
 

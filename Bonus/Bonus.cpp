@@ -6,6 +6,28 @@
 #include <imgui.h>
 #include <ImNodes.h>
 #include <ImNodesEz.h>
+#include <filesystem>
+
+///////////////////////////////////////////////////////////////////////////////
+namespace fs = std::filesystem;
+
+///////////////////////////////////////////////////////////////////////////////
+void loadNtsFiles(
+    const std::string& directory,
+    std::vector<std::string>& m_files
+)
+{
+    if (!fs::exists(directory) || !fs::is_directory(directory)) {
+        std::cerr << "Directory does not exist: " << directory << std::endl;
+        return;
+    }
+
+    for (const auto& entry : fs::directory_iterator(directory)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".nts") {
+            m_files.push_back(entry.path().string());
+        }
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts
@@ -25,7 +47,11 @@ Bonus::Bonus(const char* filename)
         throw std::runtime_error("Coudl'nt initialize ImGui");
     }
 
-    nts::Parser::parseCircuit(m_circuit, filename);
+    if (filename) {
+        nts::Parser::parseCircuit(m_circuit, filename);
+    }
+
+    loadNtsFiles("Circuits/", m_files);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,6 +128,25 @@ void Bonus::run(void)
         });
 
         ImGui::SFML::Update(m_window, m_clock.restart());
+
+        if (ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("New")) {
+                    m_circuit.clear();
+                }
+                if (ImGui::BeginMenu("Open")) {
+                    for (const auto& file : m_files) {
+                        if (ImGui::MenuItem(file.c_str())) {
+                            m_circuit.clear();
+                            Parser::parseCircuit(m_circuit, file);
+                        }
+                    }
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
 
         useDockSpace();
         m_circuit.draw();
