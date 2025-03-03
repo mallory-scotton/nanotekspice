@@ -155,6 +155,8 @@ void AComponent::applyColors(const std::string& cls) const
         color = rgb(74, 115, 143);
     } else if (cls[0] == 'C') {
         color = rgb(128, 21, 20);
+    } else if (cls[cls.length() - 1] == '>') {
+        color = rgb(133, 103, 26);
     }
 
     Ez::PushStyleColor(ImNodesStyleCol_NodeTitleBarBg, color);
