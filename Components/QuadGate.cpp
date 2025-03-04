@@ -102,8 +102,6 @@ void QuadGate<GateType>::simulate(size_t tick)
     if (m_tick == tick)
         return;
     AComponent::simulate(tick);
-    for (auto& gate : m_gates)
-        gate.simulate(tick);
     m_tick = tick;
 }
 
