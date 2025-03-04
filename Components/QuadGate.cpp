@@ -102,7 +102,10 @@ void QuadGate<GateType>::simulate(size_t tick)
     if (m_tick == tick)
         return;
     AComponent::simulate(tick);
-    m_tick = tick;
+    propagateOutput(2, compute(2));
+    propagateOutput(3, compute(3));
+    propagateOutput(9, compute(9));
+    propagateOutput(10, compute(10));
 }
 
 } // namespace nts::Components
