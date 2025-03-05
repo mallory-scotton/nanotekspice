@@ -32,8 +32,8 @@ Tristate FlipFlop::compute(size_t pin)
     if (pin <= 3)
         return (getInputState(pin));
     if (pin == 4)
-        return (m_state);
-    return (~m_state);
+        return (~m_state);
+    return (m_state);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
