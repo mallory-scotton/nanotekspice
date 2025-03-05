@@ -23,6 +23,7 @@
 #include "Components/C4017.hpp"
 #include "Components/C4040.hpp"
 #include "Components/C4094.hpp"
+#include "Components/C4512.hpp"
 #include "Components/QuadGate.hpp"
 
 #include "Sequencials/FlipFlop.hpp"
@@ -65,7 +66,7 @@ Factory::Factory(void)
     registerComponent<Components::C4071>        ("4071");
     registerComponent<Components::C4081>        ("4081");
     registerComponent<Components::C4094>                    ("4094"); //
-    registerComponent<Components::C4001>                    ("4512");
+    registerComponent<Components::C4512>                    ("4512"); //
     registerComponent<Components::C4001>                    ("4514");
     registerComponent<Components::C4001>                    ("4801");
 }

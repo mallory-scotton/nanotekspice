@@ -66,6 +66,7 @@ SOURCES				=	./Main.cpp \
 						./Components/C4040.cpp \
 						./Components/C4069.cpp \
 						./Components/C4094.cpp \
+						./Components/C4512.cpp \
 						./Components/QuadGate.cpp
 
 BONUS_SOURCES		=	./Bonus/Bonus.cpp \
