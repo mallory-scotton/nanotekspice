@@ -52,7 +52,7 @@ void Matrix::updateSelectedPixel(void)
 {
     uint16_t address = 0;
 
-    for (size_t i = 0; i < 12; i++) {
+    for (size_t i = 0; i < 16; i++) {
         if (getInputState(i + 32) == Tristate::True) {
             address |= (1 << i);
         }
