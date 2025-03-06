@@ -60,6 +60,7 @@ SOURCES				=	./Main.cpp \
 						./Gates/Xor.cpp \
 						./Sequencials/FlipFlop.cpp \
 						./Sequencials/Counter.cpp \
+						./Components/C2716.cpp \
 						./Components/C4008.cpp \
 						./Components/C4013.cpp \
 						./Components/C4017.cpp \
