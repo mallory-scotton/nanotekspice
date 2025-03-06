@@ -66,7 +66,9 @@ async function convertVideoToCommands(videoPath, targetFps = FPS) {
   // Extract frames from video
   await new Promise((resolve, reject) => {
     ffmpeg(videoPath)
-      .outputOptions([`-vf fps=${targetFps},scale=${WIDTH}:${HEIGHT}:flags=lanczos,transpose=2,format=rgba`])
+      .outputOptions([
+        `-vf fps=${targetFps},scale=${WIDTH}:${HEIGHT}:flags=lanczos,transpose=2,format=rgba`
+      ])
       .output(path.join(tempDir, 'frame-%04d.png'))
       .on('end', resolve)
       .on('error', reject)
@@ -91,12 +93,14 @@ async function convertVideoToCommands(videoPath, targetFps = FPS) {
   // Process each frame
   let previousPixels = null;
 
+  let displayMemory = new Array(WIDTH * HEIGHT * 4).fill(0);
+
   for (let i = 0; i < frameFiles.length; i++) {
     const frameFile = frameFiles[i];
     const framePath = path.join(tempDir, frameFile);
 
     // Process the frame and write to binary file
-    filePosition = await processFrameBinary(framePath, fd, filePosition, previousPixels);
+    filePosition = await processFrameBinary(framePath, fd, filePosition, displayMemory);
 
     // Add wait command after each frame (1 byte for command type)
     const waitBuffer = Buffer.alloc(1);
@@ -104,8 +108,9 @@ async function convertVideoToCommands(videoPath, targetFps = FPS) {
     fs.writeSync(fd, waitBuffer, 0, waitBuffer.length, filePosition);
     filePosition += waitBuffer.length;
 
+    // Remove this section as we're now using displayMemory instead
     // Get pixels for difference calculation in next frame
-    previousPixels = await getFramePixels(framePath);
+    // previousPixels = await getFramePixels(framePath);
 
     // Show progress
     if (i % 10 === 0) {
@@ -159,10 +164,10 @@ async function getFramePixels(framePath) {
  * @param {string} framePath - Path to the frame image
  * @param {number} fd - File descriptor
  * @param {number} position - Current file position
- * @param {Array} previousPixels - Previous frame's pixels for optimization
+ * @param {Array} displayMemory - Current state of display pixels
  * @returns {number} New file position
  */
-async function processFrameBinary(framePath, fd, position, previousPixels) {
+async function processFrameBinary(framePath, fd, position, displayMemory) {
   const image = await loadImage(framePath);
   const canvas = createCanvas(WIDTH, HEIGHT);
   const ctx = canvas.getContext('2d');
@@ -181,19 +186,22 @@ async function processFrameBinary(framePath, fd, position, previousPixels) {
       const b = imageData.data[idx + 2];
       const a = imageData.data[idx + 3];
 
-      // Skip if pixel is identical to previous frame (optimization)
-      if (previousPixels) {
-        const prevPixel = previousPixels[y * WIDTH + x];
-        if (
-          prevPixel &&
-          prevPixel[2] === r &&
-          prevPixel[3] === g &&
-          prevPixel[4] === b &&
-          prevPixel[5] === a
-        ) {
-          continue;
-        }
+      // Skip if pixel is identical to what's already in display memory
+      const memIdx = (y * WIDTH + x) * 4;
+      if (
+        displayMemory[memIdx] === r &&
+        displayMemory[memIdx + 1] === g &&
+        displayMemory[memIdx + 2] === b &&
+        displayMemory[memIdx + 3] === a
+      ) {
+        continue;
       }
+
+      // Update display memory with new pixel values
+      displayMemory[memIdx] = r;
+      displayMemory[memIdx + 1] = g;
+      displayMemory[memIdx + 2] = b;
+      displayMemory[memIdx + 3] = a;
 
       // Binary format:
       // 1 byte: command type (SET = 0x01)
