@@ -63,8 +63,8 @@ void FlipFlop::simulate(size_t tick)
 
     m_lastClock = clock;
 
-    propagateOutput(4, m_state);
-    propagateOutput(5, ~m_state);
+    propagateOutput(4, ~m_state);
+    propagateOutput(5, m_state);
 }
 
 } // namespace nts::Sequencials
