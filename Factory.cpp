@@ -81,10 +81,10 @@ Factory::Factory(void)
 
 #ifdef NTS_BONUS
     registerComponent<Components::Matrix>       ("matrix");
-    registerComponent<Bonus::Input8>            ("input8");
-    registerComponent<Bonus::Input16>           ("input16");
-    registerComponent<Bonus::Input32>           ("input32");
-    registerComponent<Bonus::InputColor>        ("color");
+    registerComponent<Components::Input8>       ("input8");
+    registerComponent<Components::Input16>      ("input16");
+    registerComponent<Components::Input32>      ("input32");
+    registerComponent<Components::InputColor>   ("color");
 #endif
 }
 

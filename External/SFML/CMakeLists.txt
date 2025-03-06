@@ -410,10 +410,10 @@ if(SFML_BUILD_DOC)
 endif()
 
 # add an option for building the examples
-sfml_set_option(SFML_BUILD_EXAMPLES OFF BOOL "ON to build the SFML examples, OFF to ignore them")
-if(SFML_BUILD_EXAMPLES AND NOT SFML_OS_ANDROID)
-    add_subdirectory(examples)
-endif()
+#sfml_set_option(SFML_BUILD_EXAMPLES OFF BOOL "ON to build the SFML examples, OFF to ignore them")
+#if(SFML_BUILD_EXAMPLES AND NOT SFML_OS_ANDROID)
+#    add_subdirectory(examples)
+#endif()
 
 # add an option for building the test suite
 sfml_set_option(SFML_BUILD_TEST_SUITE OFF BOOL "ON to build the SFML test suite, OFF to ignore it")
@@ -421,14 +421,14 @@ sfml_set_option(SFML_BUILD_TEST_SUITE OFF BOOL "ON to build the SFML test suite,
 # add an option for enabling coverage reporting
 sfml_set_option(SFML_ENABLE_COVERAGE OFF BOOL "ON to enable coverage reporting, OFF to ignore it")
 
-if(SFML_BUILD_TEST_SUITE)
-    if(SFML_BUILD_WINDOW AND SFML_BUILD_GRAPHICS AND SFML_BUILD_NETWORK AND SFML_BUILD_AUDIO)
-        enable_testing()
-        add_subdirectory(test)
-    else()
-        message(WARNING "Cannot build unit testing unless all modules are enabled")
-    endif()
-endif()
+#if(SFML_BUILD_TEST_SUITE)
+#    if(SFML_BUILD_WINDOW AND SFML_BUILD_GRAPHICS AND SFML_BUILD_NETWORK AND SFML_BUILD_AUDIO)
+#        enable_testing()
+#        add_subdirectory(test)
+#    else()
+#        message(WARNING "Cannot build unit testing unless all modules are enabled")
+#    endif()
+#endif()
 
 sfml_set_option(CLANG_FORMAT_EXECUTABLE clang-format STRING "Override clang-format executable, requires version 17")
 add_custom_target(format
