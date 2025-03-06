@@ -188,8 +188,8 @@ bool Bonus::processNextFrame(sf::Music& music)
         switch (cmdType) {
             case CMD_SET: {
                 // Make sure we have enough data for a SET command (7 bytes total)
-                if (m_bufferPosition + 6 > m_bufferSize) {
-                    return frameProcessed;
+                if (m_bufferPosition + 5 > m_bufferSize) {
+                    return (frameProcessed);
                 }
 
                 uint8_t x = m_commandBuffer[m_bufferPosition++];
@@ -197,7 +197,7 @@ bool Bonus::processNextFrame(sf::Music& music)
                 uint8_t r = m_commandBuffer[m_bufferPosition++];
                 uint8_t g = m_commandBuffer[m_bufferPosition++];
                 uint8_t b = m_commandBuffer[m_bufferPosition++];
-                uint8_t a = m_commandBuffer[m_bufferPosition++];
+                uint8_t a = 255;
 
                 m_positionComponent->setValue(x + y * 64);
                 m_colorComponent->setValue(a << 24 | b << 16 | g << 8 | r);
@@ -251,7 +251,7 @@ bool Bonus::processNextFrame(sf::Music& music)
 void Bonus::optimizeMemory(void)
 {
     // If we've processed more than half of the buffer, we can compact memory
-    if (true || (m_commandBuffer && m_bufferPosition > m_bufferSize / 2)) {
+    if (m_commandBuffer && m_bufferPosition > m_bufferSize / 2) {
         // Calculate remaining data size
         size_t remainingSize = m_bufferSize - m_bufferPosition;
 
