@@ -115,7 +115,7 @@ Tristate C2716::compute(size_t pin)
     Tristate enable = getInputState(17);
     Tristate read = getInputState(19);
 
-    if (enable != Tristate::True || read != Tristate::True)
+    if (enable != Tristate::False || read != Tristate::False)
         return (Tristate::Undefined);
 
     size_t address = getAddress();
