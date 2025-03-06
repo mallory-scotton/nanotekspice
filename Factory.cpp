@@ -17,6 +17,7 @@
 #include "Gates/Or.hpp"
 #include "Gates/Xor.hpp"
 
+#include "Components/C2716.hpp"
 #include "Components/C4008.hpp"
 #include "Components/C4069.hpp"
 #include "Components/C4013.hpp"
@@ -54,7 +55,7 @@ Factory::Factory(void)
     registerComponent<Sequencials::FlipFlop>    ("flipflop");
     registerComponent<Sequencials::Counter>     ("counter");
 
-    registerComponent<Components::C4001>                    ("2716");
+    registerComponent<Components::C2716>        ("2716");
     registerComponent<Components::C4001>        ("4001");
     registerComponent<Components::C4008>        ("4008");
     registerComponent<Components::C4011>        ("4011");
