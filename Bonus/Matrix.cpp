@@ -20,22 +20,23 @@ Matrix::Matrix(
     const std::string& name,
     const std::string& outputFile
 )
-    : AComponent(name, 44)
+    : AComponent(name, 48)
+    , m_size(64)
     , m_selectedRow(0)
     , m_selectedColumn(0)
     , m_hasChanged(false)
     , m_outputFile(outputFile)
-    , m_image({64, 64}, sf::Color::White)
+    , m_image({m_size, m_size}, sf::Color::White)
     , m_texture(m_image)
     , m_sprite(m_texture)
 {
-    m_pixels.resize(64 * 64 * 4, 255);
+    m_pixels.resize(m_size * m_size * 4, 255);
 
     for (size_t i = 0; i < 32; i++) {
         m_pins[i] = Pin(Pin::Type::INPUT);
     }
 
-    for (size_t i = 32; i < 44; i++) {
+    for (size_t i = 32; i < 48; i++) {
         m_pins[i] = Pin(Pin::Type::INPUT);
     }
 }
@@ -43,7 +44,7 @@ Matrix::Matrix(
 ///////////////////////////////////////////////////////////////////////////////
 size_t Matrix::getPixelIndex(size_t row, size_t col) const
 {
-    return ((col + row * 64) * 4);
+    return ((col + row * m_size) * 4);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,11 +58,11 @@ void Matrix::updateSelectedPixel(void)
         }
     }
 
-    m_selectedRow = address / 64;
-    m_selectedColumn = address % 64;
+    m_selectedRow = address / m_size;
+    m_selectedColumn = address % m_size;
 
-    m_selectedRow = std::min(m_selectedRow, static_cast<size_t>(63));
-    m_selectedColumn = std::min(m_selectedColumn, static_cast<size_t>(63));
+    m_selectedRow = std::min(m_selectedRow, static_cast<size_t>(m_size - 1));
+    m_selectedColumn = std::min(m_selectedColumn, static_cast<size_t>(m_size - 1));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -118,8 +119,8 @@ void Matrix::updatePixelValue(void)
 void Matrix::innerDraw(void)
 {
     if (m_hasChanged) {
-        for (uint32_t row = 0; row < 64; row++) {
-            for (uint32_t col = 0; col < 64; col++) {
+        for (uint32_t row = 0; row < m_size; row++) {
+            for (uint32_t col = 0; col < m_size; col++) {
                 size_t idx = getPixelIndex((size_t)row, (size_t)col);
                 m_image.setPixel({row, col}, sf::Color(
                     m_pixels[idx],
@@ -174,8 +175,8 @@ std::string Matrix::getDisplayState(void) const
     ss << "Matrix Display State:\n";
     ss << "--------------------\n";
 
-    for (size_t row = 0; row < 64; row++) {
-        for (size_t col = 0; col < 64; col++) {
+    for (size_t row = 0; row < m_size; row++) {
+        for (size_t col = 0; col < m_size; col++) {
             size_t idx = getPixelIndex(row, col);
 
             if (m_pixels[idx] < 32) {

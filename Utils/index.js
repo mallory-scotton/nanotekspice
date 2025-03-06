@@ -59,11 +59,7 @@ const processFrame = async (filepath) => {
         g = data[idx + 1],
         b = data[idx + 2];
 
-      if (
-        almost(r, SCREEN[idx]) ||
-        almost(g, SCREEN[idx + 1]) ||
-        almost(b, SCREEN[idx + 2])
-      ) {
+      if (almost(r, SCREEN[idx]) || almost(g, SCREEN[idx + 1]) || almost(b, SCREEN[idx + 2])) {
         pixels.push({ x, y, r, g, b });
         SCREEN[idx] = r;
         SCREEN[idx + 1] = g;
@@ -88,8 +84,15 @@ const processFrame = async (filepath) => {
     buffer.writeUint8(pixel.b, offset++);
   }
 
-  fs.writeSync(FD, buffer, 0, buffer.length, POSITION);
-  POSITION += buffer.length;
+  await new Promise((resolve, reject) => {
+    fs.write(FD, buffer, 0, buffer.length, POSITION, (err) => {
+      if (err) reject(err);
+      else {
+        POSITION += buffer.length;
+        resolve();
+      }
+    });
+  });
 };
 
 /**
@@ -166,6 +169,10 @@ const convertVideoToCommands = async (filepath, targetFps = DEFAULT_FPS) => {
 
   for (let i = 0; i < frames.length; i++) {
     await processFrame(path.join(dir, frames[i]));
+
+    const percentage = ((i + 1) / frames.length) * 100;
+    console.log(`Processing frames: ${percentage.toFixed(2)}% completed`);
+
     const waitBuffer = Buffer.alloc(1);
     waitBuffer.writeUint8(CMD_WAIT, 0);
     fs.writeSync(FD, waitBuffer, 0, waitBuffer.length, POSITION);
