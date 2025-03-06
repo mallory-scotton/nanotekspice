@@ -57,11 +57,11 @@ Tristate C4512::compute(size_t pin)
         }
         unsigned int address = 0;
 
-        if (abit == Tristate::True)
+        if (cbit == Tristate::True)
             address |= 1;
         if (bbit == Tristate::True)
             address |= 2;
-        if (cbit == Tristate::True)
+        if (abit == Tristate::True)
             address |= 4;
 
         return (getInputState(address == 7 ? 8 : address));
