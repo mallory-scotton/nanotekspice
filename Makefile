@@ -71,6 +71,8 @@ SOURCES				=	./Main.cpp \
 						./Components/QuadGate.cpp
 
 BONUS_SOURCES		=	./Bonus/Bonus.cpp \
+						./Bonus/Matrix.cpp \
+						./Bonus/DigitalInput.cpp \
 						./External/ImGui/imgui_draw.cpp \
 						./External/ImGui/imgui_tables.cpp \
 						./External/ImGui/imgui_widgets.cpp \

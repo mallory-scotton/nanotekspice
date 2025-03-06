@@ -151,7 +151,8 @@ void Circuit::clear(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void Circuit::initializePosition(void) {
+void Circuit::initializePosition(void)
+{
     const float HORIZONTAL_SPACING = 250.0f;
     const float VERTICAL_SPACING = 120.0f;
 
@@ -301,11 +302,22 @@ static const std::map<
             {"FlipFlop", "flipflop"},
             {"Counter", "counter"}
         }
+    },
+    {
+        "Bonus",
+        {
+            {"Matrix Display", "matrix"},
+            {"Digital Input 8", "input8"},
+            {"Digital Input 16", "input16"},
+            {"Digital Input 32", "input32"},
+            {"Color Picker", "color"}
+        }
     }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-void Circuit::draw(void) {
+void Circuit::draw(void)
+{
     if (!m_initialized) {
         initializePosition();
         m_initialized = true;

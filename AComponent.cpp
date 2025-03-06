@@ -129,6 +129,10 @@ std::string AComponent::getCleanClassName(void) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void AComponent::innerDraw(void)
+{}
+
+///////////////////////////////////////////////////////////////////////////////
 bool AComponent::isSelected(void) const
 {
     return (m_selected);
@@ -153,6 +157,11 @@ void AComponent::applyColors(const std::string& cls) const
         cls == "Nand" || cls == "Nor" || cls == "Not"
     ) {
         color = rgb(74, 115, 143);
+    } else if (
+        cls == "Matrix" || cls == "Input8" ||
+        cls == "Input16" || cls == "Input32" || cls == "InputColor"
+    ) {
+        color = rgb(25, 107, 111);
     } else if (cls[0] == 'C') {
         color = rgb(128, 21, 20);
     } else if (cls[cls.length() - 1] == '>') {
@@ -209,6 +218,8 @@ void AComponent::draw(void)
         }
 
         Ez::InputSlots(m_inputs.data(), m_inputs.size());
+
+        innerDraw();
 
         if (cls == "Output") {
             int state = (int)compute(0);

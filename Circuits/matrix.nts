@@ -1,0 +1,54 @@
+.chipsets:
+
+color color
+input16 position
+
+matrix matrix
+
+.links:
+
+color:1 matrix:1
+color:2 matrix:2
+color:3 matrix:3
+color:4 matrix:4
+color:5 matrix:5
+color:6 matrix:6
+color:7 matrix:7
+color:8 matrix:8
+color:9 matrix:9
+color:10 matrix:10
+color:11 matrix:11
+color:12 matrix:12
+color:13 matrix:13
+color:14 matrix:14
+color:15 matrix:15
+color:16 matrix:16
+color:17 matrix:17
+color:18 matrix:18
+color:19 matrix:19
+color:20 matrix:20
+color:21 matrix:21
+color:22 matrix:22
+color:23 matrix:23
+color:24 matrix:24
+color:25 matrix:25
+color:26 matrix:26
+color:27 matrix:27
+color:28 matrix:28
+color:29 matrix:29
+color:30 matrix:30
+color:31 matrix:31
+color:32 matrix:32
+
+position:1 matrix:33
+position:2 matrix:34
+position:3 matrix:35
+position:4 matrix:36
+position:5 matrix:37
+position:6 matrix:38
+position:7 matrix:39
+position:8 matrix:40
+position:9 matrix:41
+position:10 matrix:42
+position:11 matrix:43
+position:12 matrix:44

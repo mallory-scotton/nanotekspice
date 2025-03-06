@@ -30,6 +30,11 @@
 #include "Sequencials/FlipFlop.hpp"
 #include "Sequencials/Counter.hpp"
 
+#ifdef NTS_BONUS
+    #include "Bonus/Matrix.hpp"
+    #include "Bonus/DigitalInput.hpp"
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // Namesapce nts
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,6 +75,14 @@ Factory::Factory(void)
     registerComponent<Components::C4512>                    ("4512"); //
     registerComponent<Components::C4001>                    ("4514");
     registerComponent<Components::C4001>                    ("4801");
+
+#ifdef NTS_BONUS
+    registerComponent<Components::Matrix>       ("matrix");
+    registerComponent<Bonus::Input8>            ("input8");
+    registerComponent<Bonus::Input16>           ("input16");
+    registerComponent<Bonus::Input32>           ("input32");
+    registerComponent<Bonus::InputColor>        ("color");
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -323,7 +323,13 @@ void InputSlots(const SlotInfo* slots, int snum)
     }
     ImGui::EndGroup();
 
-    storage->SetFloat(ImGui::GetID("input-width"), ImGui::GetItemRectSize().x);
+    // float width = ImGui::GetItemRectSize().x;
+
+    float width = 0.f;
+    if (snum != 0) {
+        width = 50.f;
+    }
+    storage->SetFloat(ImGui::GetID("input-width"), width);
 
     // Move cursor to the next column
     ImGui::SetCursorScreenPos(ImVec2{storage->GetFloat(ImGui::GetID("content-x")), storage->GetFloat(ImGui::GetID("body-y"))});
@@ -362,7 +368,13 @@ void OutputSlots(const SlotInfo* slots, int snum)
     }
     ImGui::EndGroup();
 
-    storage->SetFloat(ImGui::GetID("output-width"), ImGui::GetItemRectSize().x);
+    // float width = ImGui::GetItemRectSize().x;
+
+    float width = 0.f;
+    if (snum != 0) {
+        width = 50.f;
+    }
+    storage->SetFloat(ImGui::GetID("output-width"), width);
 
     PopStyleVar(2);
 }
