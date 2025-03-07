@@ -51,7 +51,7 @@ Tristate C4512::compute(size_t pin)
         Tristate bbit = getInputState(11);
         Tristate cbit = getInputState(12);
 
-        if (strobe == Tristate::False ||
+        if (strobe == Tristate::True ||
             (abit == Undefined && bbit == Undefined && cbit == Undefined)) {
             return Tristate::Undefined;
         }
