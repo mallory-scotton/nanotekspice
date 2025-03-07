@@ -51,23 +51,23 @@ void C4017::initializeLinks(void)
     auto self = shared_from_this();
 
     m_flip_flops[0]->setLink(0, self, 13);
-    m_flip_flops[0]->setLink(1, m_flip_flops[4], 5);
+    m_flip_flops[0]->setLink(1, m_flip_flops[4], 4);
     m_flip_flops[0]->setLink(2, self, 14);
 
     m_flip_flops[1]->setLink(0, self, 13);
-    m_flip_flops[1]->setLink(1, m_flip_flops[0], 4);
+    m_flip_flops[1]->setLink(1, m_flip_flops[0], 5);
     m_flip_flops[1]->setLink(3, self, 14);
 
     m_flip_flops[2]->setLink(0, self, 13);
-    m_flip_flops[2]->setLink(1, m_flip_flops[1], 4);
+    m_flip_flops[2]->setLink(1, m_flip_flops[1], 5);
     m_flip_flops[2]->setLink(3, self, 14);
 
     m_flip_flops[3]->setLink(0, self, 13);
-    m_flip_flops[3]->setLink(1, m_flip_flops[2], 4);
+    m_flip_flops[3]->setLink(1, m_flip_flops[2], 5);
     m_flip_flops[3]->setLink(3, self, 14);
 
     m_flip_flops[4]->setLink(0, self, 13);
-    m_flip_flops[4]->setLink(1, m_flip_flops[3], 4);
+    m_flip_flops[4]->setLink(1, m_flip_flops[3], 5);
     m_flip_flops[4]->setLink(3, self, 14);
 
     m_initialized = true;
