@@ -27,6 +27,7 @@
 #include "Components/C4512.hpp"
 #include "Components/C4514.hpp"
 #include "Components/C4801.hpp"
+#include "Components/logger.hpp"
 #include "Components/QuadGate.hpp"
 
 #include "Sequencials/FlipFlop.hpp"
@@ -77,7 +78,7 @@ Factory::Factory(void)
     registerComponent<Components::C4512>        ("4512");
     registerComponent<Components::C4514>        ("4514");
     registerComponent<Components::C4801>        ("4801");
-    registerComponent<Components::C4001>                    ("logger");
+    registerComponent<Components::logger>                    ("logger");
 
 #ifdef NTS_BONUS
     registerComponent<Components::Matrix>       ("matrix");
