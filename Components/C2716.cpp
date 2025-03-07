@@ -28,8 +28,8 @@ C2716::C2716(const std::string& name)
     m_pins[5] = Pin(Pin::Type::INPUT);   // A2
     m_pins[6] = Pin(Pin::Type::INPUT);   // A1
     m_pins[7] = Pin(Pin::Type::INPUT);   // A0
-    m_pins[22] = Pin(Pin::Type::INPUT);  // A9
-    m_pins[23] = Pin(Pin::Type::INPUT);  // A8
+    m_pins[22] = Pin(Pin::Type::INPUT);  // A8
+    m_pins[21] = Pin(Pin::Type::INPUT);  // A9
     m_pins[18] = Pin(Pin::Type::INPUT);  // A10
 
     m_pins[8] = Pin(Pin::Type::OUTPUT);  // O0
@@ -46,7 +46,7 @@ C2716::C2716(const std::string& name)
 
     m_pins[11] = Pin(Pin::Type::ELECTRICAL);
     m_pins[20] = Pin(Pin::Type::ELECTRICAL);
-    m_pins[21] = Pin(Pin::Type::ELECTRICAL);
+    m_pins[23] = Pin(Pin::Type::ELECTRICAL);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,8 +81,8 @@ size_t C2716::getAddress(void)
     address |= (getInputState(2) == Tristate::True ? 1 : 0) << 5;   // A5
     address |= (getInputState(1) == Tristate::True ? 1 : 0) << 6;   // A6
     address |= (getInputState(0) == Tristate::True ? 1 : 0) << 7;   // A7
-    address |= (getInputState(23) == Tristate::True ? 1 : 0) << 8;  // A8
-    address |= (getInputState(22) == Tristate::True ? 1 : 0) << 9;  // A9
+    address |= (getInputState(22) == Tristate::True ? 1 : 0) << 8;  // A8
+    address |= (getInputState(21) == Tristate::True ? 1 : 0) << 9;  // A9
     address |= (getInputState(18) == Tristate::True ? 1 : 0) << 10; // A10
 
     return (address & 0x7FF);
@@ -105,12 +105,8 @@ Tristate C2716::compute(size_t pin)
 {
     if (pin >= m_pins.size())
         throw OutOfRangePinException();
-
-    if (m_pins[pin].getType() == Pin::Type::INPUT)
+    if (m_pins[pin].getType() != Pin::Type::OUTPUT)
         return getInputState(pin);
-
-    if (m_pins[pin].getType() == Pin::Type::ELECTRICAL)
-        return (Tristate::Undefined);
 
     Tristate enable = getInputState(17);
     Tristate read = getInputState(19);
@@ -136,6 +132,7 @@ Tristate C2716::compute(size_t pin)
             return (Tristate::Undefined);
     }
 
+    // Invert the output based on error message pattern
     return (data & (1 << bitPos)) ? Tristate::True : Tristate::False;
 }
 

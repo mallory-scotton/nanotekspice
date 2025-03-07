@@ -85,6 +85,8 @@ Tristate AComponent::getInputState(size_t pin)
         std::pair<const IComponent*, size_t>
     > computingPins;
 
+    if (m_pins[pin].getType() == Pin::Type::ELECTRICAL)
+        return (Tristate::Undefined);
     if (pin >= m_pins.size() || m_pins[pin].getType() == Pin::Type::OUTPUT)
         throw ComponentException("Invalid input pin");
     Tristate result = Tristate::Undefined;
