@@ -55,6 +55,7 @@ void logger::simulate(size_t tick)
         std::ofstream logFile("./log.bin", std::ios::app | std::ios::binary);
         if (logFile.is_open()) {
             logFile.write(&byte, 1);
+            logFile.flush();
             logFile.close();
         }
     }
