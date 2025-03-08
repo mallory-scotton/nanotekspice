@@ -14,6 +14,8 @@ namespace nts::Components
 C4801::C4801(const std::string& name)
     : AComponent(name, 24)
 {
+    m_memory.resize(1024, Tristate::Undefined);
+
     m_pins[0] = Pin(Pin::Type::INPUT);   // addr7
     m_pins[1] = Pin(Pin::Type::INPUT);   // addr6
     m_pins[2] = Pin(Pin::Type::INPUT);   // addr5
@@ -37,6 +39,7 @@ C4801::C4801(const std::string& name)
     m_pins[15] = Pin(Pin::Type::OUTPUT); // O6
     m_pins[16] = Pin(Pin::Type::OUTPUT); // O7
 
+    m_pins[18] = Pin(Pin::Type::ELECTRICAL);
     m_pins[11] = Pin(Pin::Type::ELECTRICAL);
     m_pins[20] = Pin(Pin::Type::ELECTRICAL);
     m_pins[23] = Pin(Pin::Type::ELECTRICAL);
@@ -58,12 +61,12 @@ size_t C4801::getAddress() {
     if (getInputState(22) == Tristate::True) address |= 0x100; // A8
     if (getInputState(21) == Tristate::True) address |= 0x200; // A9
 
-    return address;
+    return (address);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 Tristate C4801::readDataPins() {
-    int dataValue = 0;
+    uint8_t dataValue = 0;
 
     if (getInputState(8) == Tristate::True) dataValue |= 0x01;
     if (getInputState(9) == Tristate::True) dataValue |= 0x02;
@@ -74,15 +77,15 @@ Tristate C4801::readDataPins() {
     if (getInputState(15) == Tristate::True) dataValue |= 0x40;
     if (getInputState(16) == Tristate::True) dataValue |= 0x80;
 
-    return static_cast<Tristate>(dataValue);
+    return (static_cast<Tristate>(dataValue));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void C4801::writeToMemory() {
     size_t address = getAddress();
 
-    if (address < _memory.size()) {
-        _memory[address] = readDataPins();
+    if (address < m_memory.size()) {
+        m_memory[address] = readDataPins();
     }
 }
 
@@ -90,11 +93,11 @@ void C4801::writeToMemory() {
 Tristate C4801::readFromMemory() {
     size_t address = getAddress();
 
-    if (address < _memory.size()) {
-        return _memory[address];
+    if (address < m_memory.size()) {
+        return (m_memory[address]);
     }
 
-    return Tristate::Undefined;
+    return (Tristate::Undefined);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,9 +107,9 @@ void C4801::simulate(size_t tick)
         return;
     AComponent::simulate(tick);
 
-    bool enabled = (getInputState(17) == Tristate::True);
-    bool readEnabled = (getInputState(18) == Tristate::True);
-    bool writeEnabled = (getInputState(19) == Tristate::True);
+    bool enabled = (getInputState(17) == Tristate::False);
+    bool readEnabled = (getInputState(19) == Tristate::False);
+    bool writeEnabled = (getInputState(20) == Tristate::False);
 
     if (enabled) {
         if (writeEnabled && !readEnabled) {
@@ -140,34 +143,30 @@ Tristate C4801::compute(size_t pin)
 {
     if (pin >= m_pins.size())
         throw OutOfRangePinException();
-    if (m_pins[pin].getType() == Pin::Type::INPUT)
-        return getInputState(pin);
-    if (m_pins[pin].getType() == Pin::Type::ELECTRICAL)
-        return Tristate::Undefined;
+    if (m_pins[pin].getType() != Pin::Type::OUTPUT)
+        return (getInputState(pin));
 
-    if (m_pins[pin].getType() == Pin::Type::OUTPUT) {
-        bool enabled = (getInputState(17) == Tristate::True);
-        bool readEnabled = (getInputState(18) == Tristate::True);
-        bool writeEnabled = (getInputState(19) == Tristate::True);
+    bool enabled = (getInputState(17) == Tristate::True);
+    bool readEnabled = (getInputState(18) == Tristate::True);
+    bool writeEnabled = (getInputState(19) == Tristate::True);
 
-        if (enabled && readEnabled && !writeEnabled) {
-            Tristate data = readFromMemory();
-            int dataValue = static_cast<int>(data);
+    if (enabled && readEnabled && !writeEnabled) {
+        Tristate data = readFromMemory();
+        int dataValue = static_cast<int>(data);
 
-            switch (pin) {
-                case 8:  return (dataValue & 0x01) ? Tristate::True : Tristate::False;
-                case 9:  return (dataValue & 0x02) ? Tristate::True : Tristate::False;
-                case 10: return (dataValue & 0x04) ? Tristate::True : Tristate::False;
-                case 12: return (dataValue & 0x08) ? Tristate::True : Tristate::False;
-                case 13: return (dataValue & 0x10) ? Tristate::True : Tristate::False;
-                case 14: return (dataValue & 0x20) ? Tristate::True : Tristate::False;
-                case 15: return (dataValue & 0x40) ? Tristate::True : Tristate::False;
-                case 16: return (dataValue & 0x80) ? Tristate::True : Tristate::False;
-                default: return Tristate::Undefined;
-            }
+        switch (pin) {
+            case 8:  return (dataValue & 0x01) ? Tristate::True : Tristate::False;
+            case 9:  return (dataValue & 0x02) ? Tristate::True : Tristate::False;
+            case 10: return (dataValue & 0x04) ? Tristate::True : Tristate::False;
+            case 12: return (dataValue & 0x08) ? Tristate::True : Tristate::False;
+            case 13: return (dataValue & 0x10) ? Tristate::True : Tristate::False;
+            case 14: return (dataValue & 0x20) ? Tristate::True : Tristate::False;
+            case 15: return (dataValue & 0x40) ? Tristate::True : Tristate::False;
+            case 16: return (dataValue & 0x80) ? Tristate::True : Tristate::False;
+            default: return (Tristate::Undefined);
         }
     }
-    return Tristate::Undefined;
+    return (Tristate::Undefined);
 }
 
 } // namespace nts::Components
