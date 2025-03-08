@@ -33,6 +33,12 @@ bool operator!(const Tristate& state)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+bool operator&&(const Tristate& lhs, const Tristate& rhs)
+{
+    return (lhs == Tristate::True && rhs == Tristate::True);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 Tristate operator~(const Tristate& state)
 {
     if (state == Tristate::Undefined)
