@@ -46,7 +46,12 @@ void logger::simulate(size_t tick)
     Tristate clock = getInputState(8);
     char byte = 0;
     for (size_t i = 0; i < 8; i++) {
-        if (getInputState(i) == Tristate::True) {
+        Tristate input = getInputState(i);
+        if (input == Tristate::Undefined) {
+            m_lastClock = clock;
+            return;
+        }
+        if (input == Tristate::True) {
             byte |= (1 << i);
         }
     }
