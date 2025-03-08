@@ -29,6 +29,7 @@ private:
     uint8_t m_storageRegister;
     Tristate m_lastStrobe;
     Tristate m_serialOut;
+    Tristate m_previousSerialOut;
 
 public:
     ///////////////////////////////////////////////////////////////////////////
