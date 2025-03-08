@@ -15,16 +15,16 @@ namespace nts::Components
 logger::logger(const std::string& name)
     : AComponent(name, 16)
 {
-    m_pins[0] = Pin(Pin::Type::INPUT, "B1"); // in1
-    m_pins[1] = Pin(Pin::Type::INPUT, "B2"); // in2
-    m_pins[2] = Pin(Pin::Type::INPUT, "B4"); // in4
-    m_pins[3] = Pin(Pin::Type::INPUT, "B8"); // in8
-    m_pins[4] = Pin(Pin::Type::INPUT, "B16"); // in16
-    m_pins[5] = Pin(Pin::Type::INPUT, "B32"); // in32
-    m_pins[6] = Pin(Pin::Type::INPUT, "B64"); // in64
-    m_pins[7] = Pin(Pin::Type::INPUT, "B128"); // in128
-    m_pins[8] = Pin(Pin::Type::INPUT, "CLK"); // clock
-    m_pins[9] = Pin(Pin::Type::INPUT, "INH"); // inhibit
+    m_pins[0] = Pin(Pin::Type::INPUT, "B1");    // in1
+    m_pins[1] = Pin(Pin::Type::INPUT, "B2");    // in2
+    m_pins[2] = Pin(Pin::Type::INPUT, "B4");    // in4
+    m_pins[3] = Pin(Pin::Type::INPUT, "B8");    // in8
+    m_pins[4] = Pin(Pin::Type::INPUT, "B16");   // in16
+    m_pins[5] = Pin(Pin::Type::INPUT, "B32");   // in32
+    m_pins[6] = Pin(Pin::Type::INPUT, "B64");   // in64
+    m_pins[7] = Pin(Pin::Type::INPUT, "B128");  // in128
+    m_pins[8] = Pin(Pin::Type::INPUT, "CLK");   // clock
+    m_pins[9] = Pin(Pin::Type::INPUT, "INH");   // inhibit
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,6 @@ void logger::simulate(size_t tick)
             byte |= (1 << i);
         }
     }
-    // Write to log file on positive clock edge when not inhibited
     if (inhibit == False && m_lastClock != True && clock == True) {
         std::ofstream logFile("./log.bin", std::ios::app | std::ios::binary);
         if (logFile.is_open()) {

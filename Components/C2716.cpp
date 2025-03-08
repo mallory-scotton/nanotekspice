@@ -132,7 +132,6 @@ Tristate C2716::compute(size_t pin)
             return (Tristate::Undefined);
     }
 
-    // Invert the output based on error message pattern
     return (data & (1 << bitPos)) ? Tristate::True : Tristate::False;
 }
 

@@ -78,7 +78,7 @@ Factory::Factory(void)
     registerComponent<Components::C4512>        ("4512");
     registerComponent<Components::C4514>        ("4514");
     registerComponent<Components::C4801>        ("4801");
-    registerComponent<Components::logger>                    ("logger");
+    registerComponent<Components::logger>       ("logger");
 
 #ifdef NTS_BONUS
     registerComponent<Components::Matrix>       ("matrix");

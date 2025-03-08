@@ -13,6 +13,7 @@ namespace nts::Components
 {
 ///////////////////////////////////////////////////////////////////////////////
 /// \brief 8-Channel Data Selector/Multiplexer (4512)
+///
 ///////////////////////////////////////////////////////////////////////////////
 class C4512 : public AComponent
 {
@@ -21,6 +22,7 @@ public:
     /// \brief Constructor
     ///
     /// \param name Component name
+    ///
     ///////////////////////////////////////////////////////////////////////////
     C4512(const std::string& name);
 
@@ -29,6 +31,7 @@ public:
     /// \brief Simulate function
     ///
     /// \param tick Simulation tick
+    ///
     ///////////////////////////////////////////////////////////////////////////
     void simulate(size_t tick) override;
 
@@ -36,7 +39,9 @@ public:
     /// \brief Compute function
     ///
     /// \param pin Pin number
+    ///
     /// \return Tristate logic value
+    ///
     ///////////////////////////////////////////////////////////////////////////
     Tristate compute(size_t pin) override;
 };
