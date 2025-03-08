@@ -106,9 +106,9 @@ void C4801::simulate(size_t tick)
         return;
     AComponent::simulate(tick);
 
-    bool enabled = (getInputState(17) == Tristate::False);
-    bool readEnabled = (getInputState(19) == Tristate::False);
-    bool writeEnabled = (getInputState(20) == Tristate::False);
+    bool enabled = (getInputState(17) == Tristate::True);
+    bool readEnabled = (getInputState(19) == Tristate::True);
+    bool writeEnabled = (getInputState(20) == Tristate::True);
 
     if (enabled) {
         if (writeEnabled && !readEnabled) {
