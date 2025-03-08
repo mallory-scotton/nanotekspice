@@ -1,0 +1,29 @@
+# RS Flip-Flop using two 4001 NOR gate ICs
+#
+# Reset --->|NOR|---+---> Q
+#           |   |   |
+#           +---+   |
+#             ^     |
+#             |     v
+#             +-----|NOR|<--- Set
+#                   |   |
+#                   +---+---> Q_bar
+
+.chipsets:
+input reset
+input set
+output q
+output q_bar
+4001 nor1
+4001 nor2
+
+.links:
+# First NOR gate connections
+reset:1 nor1:1
+nor2:3 nor1:2
+q:1 nor1:3
+
+# Second NOR gate connections
+set:1 nor2:1
+nor1:3 nor2:2
+q_bar:1 nor2:3
