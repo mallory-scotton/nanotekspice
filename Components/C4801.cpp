@@ -41,7 +41,6 @@ C4801::C4801(const std::string& name)
 
     m_pins[18] = Pin(Pin::Type::ELECTRICAL);        // Ignored
     m_pins[11] = Pin(Pin::Type::ELECTRICAL);        // Ignored
-    m_pins[20] = Pin(Pin::Type::ELECTRICAL);        // Ignored
     m_pins[23] = Pin(Pin::Type::ELECTRICAL);        // Ignored
 }
 
