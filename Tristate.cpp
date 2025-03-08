@@ -27,6 +27,12 @@ std::ostream& operator<<(std::ostream& os, const Tristate& state)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+bool operator!(const Tristate& state)
+{
+    return (state == Tristate::False);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 Tristate operator~(const Tristate& state)
 {
     if (state == Tristate::Undefined)
