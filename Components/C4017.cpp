@@ -102,7 +102,7 @@ void C4017::simulate(size_t tick)
         m_count = 0;
     } else if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp0 != Tristate::True) {
         m_count += m_count < 9 ? 1 : -9;
-    } else if (cp0 == Tristate::True && cp1 == Tristate::True && m_lastCp1 != Tristate::True) {
+    } else if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp1 != Tristate::False) {
         m_count += m_count < 9 ? 1 : -9;
     }
     m_lastCp0 = cp0;
