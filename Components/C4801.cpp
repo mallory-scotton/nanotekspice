@@ -16,28 +16,28 @@ C4801::C4801(const std::string& name)
 {
     m_memory.resize(1024, Tristate::Undefined);
 
-    m_pins[0] = Pin(Pin::Type::INPUT);   // addr7
-    m_pins[1] = Pin(Pin::Type::INPUT);   // addr6
-    m_pins[2] = Pin(Pin::Type::INPUT);   // addr5
-    m_pins[3] = Pin(Pin::Type::INPUT);   // addr4
-    m_pins[4] = Pin(Pin::Type::INPUT);   // addr3
-    m_pins[5] = Pin(Pin::Type::INPUT);   // addr2
-    m_pins[6] = Pin(Pin::Type::INPUT);   // addr1
-    m_pins[7] = Pin(Pin::Type::INPUT);   // addr0
-    m_pins[17] = Pin(Pin::Type::INPUT);  // enable
-    m_pins[19] = Pin(Pin::Type::INPUT);  // read
-    m_pins[20] = Pin(Pin::Type::INPUT);  // write
-    m_pins[21] = Pin(Pin::Type::INPUT);  // addr9
-    m_pins[22] = Pin(Pin::Type::INPUT);  // addr8
+    m_pins[0] = Pin(Pin::Type::INPUT, "X7");   // addr7
+    m_pins[1] = Pin(Pin::Type::INPUT, "X6");   // addr6
+    m_pins[2] = Pin(Pin::Type::INPUT, "X5");   // addr5
+    m_pins[3] = Pin(Pin::Type::INPUT, "X4");   // addr4
+    m_pins[4] = Pin(Pin::Type::INPUT, "X3");   // addr3
+    m_pins[5] = Pin(Pin::Type::INPUT, "X2");   // addr2
+    m_pins[6] = Pin(Pin::Type::INPUT, "X1");   // addr1
+    m_pins[7] = Pin(Pin::Type::INPUT, "X0");   // addr0
+    m_pins[17] = Pin(Pin::Type::INPUT, "Enable");  // enable
+    m_pins[19] = Pin(Pin::Type::INPUT, "Read");  // read
+    m_pins[20] = Pin(Pin::Type::INPUT, "Write");  // write
+    m_pins[21] = Pin(Pin::Type::INPUT, "X9");  // addr9
+    m_pins[22] = Pin(Pin::Type::INPUT, "X8");  // addr8
 
-    m_pins[8] = Pin(Pin::Type::OUTPUT); // O0
-    m_pins[9] = Pin(Pin::Type::OUTPUT); // O1
-    m_pins[10] = Pin(Pin::Type::OUTPUT); // O2
-    m_pins[12] = Pin(Pin::Type::OUTPUT); // O3
-    m_pins[13] = Pin(Pin::Type::OUTPUT); // O4
-    m_pins[14] = Pin(Pin::Type::OUTPUT); // O5
-    m_pins[15] = Pin(Pin::Type::OUTPUT); // O6
-    m_pins[16] = Pin(Pin::Type::OUTPUT); // O7
+    m_pins[8] = Pin(Pin::Type::OUTPUT, "O0"); // O0
+    m_pins[9] = Pin(Pin::Type::OUTPUT, "O1"); // O1
+    m_pins[10] = Pin(Pin::Type::OUTPUT, "O2"); // O2
+    m_pins[12] = Pin(Pin::Type::OUTPUT, "O3"); // O3
+    m_pins[13] = Pin(Pin::Type::OUTPUT, "O4"); // O4
+    m_pins[14] = Pin(Pin::Type::OUTPUT, "O5"); // O5
+    m_pins[15] = Pin(Pin::Type::OUTPUT, "O6"); // O6
+    m_pins[16] = Pin(Pin::Type::OUTPUT, "O7"); // O7
 
     m_pins[18] = Pin(Pin::Type::ELECTRICAL);
     m_pins[11] = Pin(Pin::Type::ELECTRICAL);

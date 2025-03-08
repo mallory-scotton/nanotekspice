@@ -20,29 +20,29 @@ C2716::C2716(const std::string& name)
 
     m_fileLoaded = loadRomFile();
 
-    m_pins[0] = Pin(Pin::Type::INPUT);   // A7
-    m_pins[1] = Pin(Pin::Type::INPUT);   // A6
-    m_pins[2] = Pin(Pin::Type::INPUT);   // A5
-    m_pins[3] = Pin(Pin::Type::INPUT);   // A4
-    m_pins[4] = Pin(Pin::Type::INPUT);   // A3
-    m_pins[5] = Pin(Pin::Type::INPUT);   // A2
-    m_pins[6] = Pin(Pin::Type::INPUT);   // A1
-    m_pins[7] = Pin(Pin::Type::INPUT);   // A0
-    m_pins[22] = Pin(Pin::Type::INPUT);  // A8
-    m_pins[21] = Pin(Pin::Type::INPUT);  // A9
-    m_pins[18] = Pin(Pin::Type::INPUT);  // A10
+    m_pins[0] = Pin(Pin::Type::INPUT, "A7");
+    m_pins[1] = Pin(Pin::Type::INPUT, "A6");
+    m_pins[2] = Pin(Pin::Type::INPUT, "A5");
+    m_pins[3] = Pin(Pin::Type::INPUT, "A4");
+    m_pins[4] = Pin(Pin::Type::INPUT, "A3");
+    m_pins[5] = Pin(Pin::Type::INPUT, "A2");
+    m_pins[6] = Pin(Pin::Type::INPUT, "A1");
+    m_pins[7] = Pin(Pin::Type::INPUT, "A0");
+    m_pins[22] = Pin(Pin::Type::INPUT, "A8");
+    m_pins[21] = Pin(Pin::Type::INPUT, "A9");
+    m_pins[18] = Pin(Pin::Type::INPUT, "A10");
 
-    m_pins[8] = Pin(Pin::Type::OUTPUT);  // O0
-    m_pins[9] = Pin(Pin::Type::OUTPUT);  // O1
-    m_pins[10] = Pin(Pin::Type::OUTPUT); // O2
-    m_pins[12] = Pin(Pin::Type::OUTPUT); // O3
-    m_pins[13] = Pin(Pin::Type::OUTPUT); // O4
-    m_pins[14] = Pin(Pin::Type::OUTPUT); // O5
-    m_pins[15] = Pin(Pin::Type::OUTPUT); // O6
-    m_pins[16] = Pin(Pin::Type::OUTPUT); // O7
+    m_pins[8] = Pin(Pin::Type::OUTPUT, "O0");
+    m_pins[9] = Pin(Pin::Type::OUTPUT, "O1");
+    m_pins[10] = Pin(Pin::Type::OUTPUT, "O2");
+    m_pins[12] = Pin(Pin::Type::OUTPUT, "O3");
+    m_pins[13] = Pin(Pin::Type::OUTPUT, "O4");
+    m_pins[14] = Pin(Pin::Type::OUTPUT, "O5");
+    m_pins[15] = Pin(Pin::Type::OUTPUT, "O6");
+    m_pins[16] = Pin(Pin::Type::OUTPUT, "O7");
 
-    m_pins[17] = Pin(Pin::Type::INPUT);  // Enable
-    m_pins[19] = Pin(Pin::Type::INPUT);  // Read
+    m_pins[17] = Pin(Pin::Type::INPUT, "Enable");
+    m_pins[19] = Pin(Pin::Type::INPUT, "Read");
 
     m_pins[11] = Pin(Pin::Type::ELECTRICAL);
     m_pins[20] = Pin(Pin::Type::ELECTRICAL);
