@@ -44,24 +44,26 @@ Tristate C4512::compute(size_t pin)
         Tristate inhibit = getInputState(9);
         Tristate strobe = getInputState(14);
 
+        if (strobe == Tristate::True) {
+            return (Tristate::Undefined);
+        }
         if (inhibit == Tristate::True) {
-            return Tristate::False;
+            return (Tristate::False);
         }
         Tristate abit = getInputState(10);
         Tristate bbit = getInputState(11);
         Tristate cbit = getInputState(12);
 
-        if (strobe == Tristate::True ||
-            (abit == Undefined && bbit == Undefined && cbit == Undefined)) {
-            return Tristate::Undefined;
+        if ((abit == Undefined && bbit == Undefined && cbit == Undefined)) {
+            return (Tristate::Undefined);
         }
         unsigned int address = 0;
 
-        if (cbit == Tristate::True)
+        if (abit == Tristate::True)
             address |= 1;
         if (bbit == Tristate::True)
             address |= 2;
-        if (abit == Tristate::True)
+        if (cbit == Tristate::True)
             address |= 4;
 
         return (getInputState(address == 7 ? 8 : address));
