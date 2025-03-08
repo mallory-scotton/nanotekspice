@@ -37,7 +37,7 @@ C4017::C4017(const std::string& name)
 
 Tristate C4017::decoder(size_t pin)
 {
-    if ((pin == 0 || pin == 11) && m_count == 5) // count 5
+    if (pin == 0 && m_count == 5) // count 5
         return (Tristate::True);
     if ((pin == 1 || pin == 11) && m_count == 1) // count 1
         return (Tristate::True);
@@ -94,16 +94,18 @@ void C4017::simulate(size_t tick)
     if (m_tick == tick)
         return;
     AComponent::simulate(tick);
-    Tristate cp0 = getInputState(12);
-    Tristate cp1 = getInputState(13);
+    Tristate cp1 = getInputState(12);
+    Tristate cp0 = getInputState(13);
     Tristate mr = getInputState(14);
 
+    if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp0 != Tristate::True) {
+        m_count += m_count < 9 ? 1 : -9;
+    }
+    if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp1 != Tristate::False) {
+        m_count += m_count < 9 ? 1 : -9;
+    }
     if (mr == Tristate::True) {
         m_count = 0;
-    } else if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp0 != Tristate::True) {
-        m_count += m_count < 9 ? 1 : -9;
-    } else if (cp0 == Tristate::True && cp1 == Tristate::False && m_lastCp1 != Tristate::False) {
-        m_count += m_count < 9 ? 1 : -9;
     }
     m_lastCp0 = cp0;
     m_lastCp1 = cp1;
