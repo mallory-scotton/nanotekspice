@@ -345,8 +345,27 @@ void Circuit::draw(void)
         if (ImNodes::GetNewConnection(
             (void**)&inNode, &inSlot, (void**)&outNode, &outSlot)
         ) {
-            size_t in = (size_t)std::atol(inSlot);
-            size_t out = (size_t)std::atol(outSlot);
+            size_t in, out;
+            for (size_t i = 0; i < inNode->getPins().size(); i++) {
+                std::string name = inNode->getPins()[i].getName();
+                if (name.empty()) {
+                    name = std::to_string(i);
+                }
+                if (inSlot == name) {
+                    in = i;
+                    break;
+                }
+            }
+            for (size_t i = 0; i < outNode->getPins().size(); i++) {
+                std::string name = outNode->getPins()[i].getName();
+                if (name.empty()) {
+                    name = std::to_string(i);
+                }
+                if (outSlot == name) {
+                    out = i;
+                    break;
+                }
+            }
             setLink(inNode->getName(), in, outNode->getName(), out);
         }
     }
