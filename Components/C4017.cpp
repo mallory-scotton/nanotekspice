@@ -27,15 +27,15 @@ C4017::C4017(const std::string& name)
     m_pins[13] = Pin(Pin::Type::INPUT, "CP1");
     m_pins[14] = Pin(Pin::Type::INPUT, "MR");
 
-    m_pins[0]  = Pin(Pin::Type::OUTPUT, "Q0");
+    m_pins[0]  = Pin(Pin::Type::OUTPUT, "Q5");
     m_pins[1]  = Pin(Pin::Type::OUTPUT, "Q1");
-    m_pins[2]  = Pin(Pin::Type::OUTPUT, "Q2");
-    m_pins[3]  = Pin(Pin::Type::OUTPUT, "Q3");
-    m_pins[4]  = Pin(Pin::Type::OUTPUT, "Q4");
-    m_pins[5]  = Pin(Pin::Type::OUTPUT, "Q5");
-    m_pins[6]  = Pin(Pin::Type::OUTPUT, "Q6");
-    m_pins[8]  = Pin(Pin::Type::OUTPUT, "Q7");
-    m_pins[9]  = Pin(Pin::Type::OUTPUT, "Q8");
+    m_pins[2]  = Pin(Pin::Type::OUTPUT, "Q0");
+    m_pins[3]  = Pin(Pin::Type::OUTPUT, "Q2");
+    m_pins[4]  = Pin(Pin::Type::OUTPUT, "Q6");
+    m_pins[5]  = Pin(Pin::Type::OUTPUT, "Q7");
+    m_pins[6]  = Pin(Pin::Type::OUTPUT, "Q3");
+    m_pins[8]  = Pin(Pin::Type::OUTPUT, "Q8");
+    m_pins[9]  = Pin(Pin::Type::OUTPUT, "Q4");
     m_pins[10] = Pin(Pin::Type::OUTPUT, "Q9");
     m_pins[11] = Pin(Pin::Type::OUTPUT, "Q5-9");
 
