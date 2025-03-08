@@ -5,6 +5,7 @@
 #include "Errors/OutOfRangePinException.hpp"
 #include <limits>
 #include <bitset>
+#include <cmath>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Namespace nts::Components
@@ -17,8 +18,12 @@ Input8::Input8(const std::string& name)
     : AComponent(name, 8)
     , m_value(0)
 {
+    uint64_t size = 1;
     for (size_t i = 0; i < 8; i++) {
-        m_pins[i] = Pin(Pin::Type::OUTPUT);
+        if (i > 0) {
+            size *= 2;
+        }
+        m_pins[i] = Pin(Pin::Type::OUTPUT, "B" + std::to_string(size));
     }
 }
 
@@ -49,8 +54,12 @@ Input16::Input16(const std::string& name)
     : AComponent(name, 16)
     , m_value(0)
 {
+    uint64_t size = 1;
     for (size_t i = 0; i < 16; i++) {
-        m_pins[i] = Pin(Pin::Type::OUTPUT);
+        if (i > 0) {
+            size *= 2;
+        }
+        m_pins[i] = Pin(Pin::Type::OUTPUT, "B" + std::to_string(size));
     }
 }
 
@@ -88,8 +97,12 @@ Input32::Input32(const std::string& name)
     : AComponent(name, 32)
     , m_value(0)
 {
+    uint64_t size = 1;
     for (size_t i = 0; i < 32; i++) {
-        m_pins[i] = Pin(Pin::Type::OUTPUT);
+        if (i > 0) {
+            size *= 2;
+        }
+        m_pins[i] = Pin(Pin::Type::OUTPUT, "B" + std::to_string(size));
     }
 }
 
@@ -121,8 +134,15 @@ InputColor::InputColor(const std::string& name)
     : AComponent(name, 32)
     , m_value(UINT32_MAX)
 {
-    for (size_t i = 0; i < 32; i++) {
-        m_pins[i] = Pin(Pin::Type::OUTPUT);
+    const std::string ltrs[4] = {"R", "G", "B", "A"};
+    for (size_t j = 0; j < 4; j++) {
+        uint64_t size = 1;
+        for (size_t i = j * 8; i < j * 8 + 8; i++) {
+            if (i % 8 > 0) {
+                size *= 2;
+            }
+            m_pins[i] = Pin(Pin::Type::OUTPUT, ltrs[j] + std::to_string(size));
+        }
     }
 }
 

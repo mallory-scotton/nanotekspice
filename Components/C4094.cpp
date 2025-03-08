@@ -45,14 +45,14 @@ Tristate C4094::compute(size_t pin)
     Tristate outputEnable = getInputState(14);
 
     if (pin == 7 || pin == 15) {
-        return Tristate::Undefined;
+        return (Tristate::Undefined);
     }
     if (pin == 0 || pin == 1 || pin == 2 || pin == 14) {
-        return getInputState(pin);
+        return (getInputState(pin));
     }
     if (outputEnable == Tristate::False) {
         if (pin != 8 && pin != 9) {
-            return Tristate::Undefined;
+            return (Tristate::Undefined);
         }
     }
     switch (pin) {

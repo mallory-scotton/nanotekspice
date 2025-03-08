@@ -66,7 +66,7 @@ Tristate C4017::compute(size_t pin)
     switch (pin) {
         case 7:
         case 15:
-            return Tristate::Undefined;
+            return (Tristate::Undefined);
         case 0:
         case 1:
         case 2:
@@ -82,7 +82,7 @@ Tristate C4017::compute(size_t pin)
         case 12:
         case 13:
         case 14:
-            return getInputState(pin);
+            return (getInputState(pin));
         default:
             throw OutOfRangePinException();
     }

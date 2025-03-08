@@ -17,12 +17,12 @@ FlipFlop::FlipFlop(const std::string& name)
     , m_q1state(Tristate::False)
     , m_q2state(Tristate::True)
 {
-    m_pins[0] = Pin(Pin::Type::INPUT);      // Clock
-    m_pins[1] = Pin(Pin::Type::INPUT);      // Data
-    m_pins[2] = Pin(Pin::Type::INPUT);      // Set
-    m_pins[3] = Pin(Pin::Type::INPUT);      // Reset
-    m_pins[4] = Pin(Pin::Type::OUTPUT);     // Q
-    m_pins[5] = Pin(Pin::Type::OUTPUT);     // Q̄
+    m_pins[0] = Pin(Pin::Type::INPUT, "CLK");
+    m_pins[1] = Pin(Pin::Type::INPUT, "D");
+    m_pins[2] = Pin(Pin::Type::INPUT, "MS");
+    m_pins[3] = Pin(Pin::Type::INPUT, "MR");
+    m_pins[4] = Pin(Pin::Type::OUTPUT, "Q");
+    m_pins[5] = Pin(Pin::Type::OUTPUT, "Q|");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
