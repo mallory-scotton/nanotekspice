@@ -1,0 +1,311 @@
+# Test script for 4017 Johnson Decade Counter
+# This script tests:
+# 1. Normal counting sequence with clock pulses
+# 2. Reset functionality
+# 3. Enable/disable with the clock enable pin
+
+# Initialize all inputs to 0
+in_0=0
+in_1=0
+in_r=0
+simulate
+display
+
+# ----- Test 1: Normal counting sequence -----
+# The 4017 should sequence through outputs 0-9 with each clock pulse
+# when clock enable is active (in_1 = 0) and reset is inactive (in_r = 0)
+
+# Check initial state (should be out_0 = 1, all others = 0)
+display
+# Expected: out_0=1, all other outputs=0
+
+# Pulse 1: out_0 → out_1
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0
+
+# Pulse 2: out_1 → out_2
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_2=1, all other outputs=0
+
+# Pulse 3: out_2 → out_3
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_3=1, all other outputs=0
+
+# Pulse 4: out_3 → out_4
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_4=1, all other outputs=0
+
+# Pulse 5: out_4 → out_5
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_5=1, all other outputs=0
+
+# Pulse 6: out_5 → out_6
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_6=1, all other outputs=0
+
+# Pulse 7: out_6 → out_7
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_7=1, all other outputs=0
+
+# Pulse 8: out_7 → out_8
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_8=1, all other outputs=0
+
+# Pulse 9: out_8 → out_9
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_9=1, all other outputs=0
+
+# Pulse 10: out_9 → out_0 (completes the cycle)
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_0=1, all other outputs=0
+
+# ----- Test 2: Reset functionality -----
+# The reset pin should immediately set the counter back to 0
+
+# Pulse to advance to out_1
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0
+
+# Pulse to advance to out_2
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_2=1, all other outputs=0
+
+# Now reset the counter
+in_r=1
+simulate
+display
+# Expected: out_0=1, all other outputs=0
+
+# Verify counter stays at 0 while reset is high, even with clock pulses
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_0=1, all other outputs=0 (no change)
+
+# Release reset
+in_r=0
+simulate
+display
+# Expected: out_0=1, all other outputs=0
+
+# ----- Test 3: Clock enable functionality -----
+# When clock enable (in_1) is high, the counter should ignore clock pulses
+
+# First ensure we're at a known state
+in_r=1
+simulate
+in_r=0
+simulate
+display
+# Expected: out_0=1, all other outputs=0
+
+# Pulse once to advance to out_1
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0
+
+# Disable the clock by setting in_1 high
+in_1=1
+simulate
+display
+# Expected: out_1=1, all other outputs=0
+
+# Try to pulse the clock while disabled
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0 (no change)
+
+# Try a few more clock pulses while disabled
+in_0=1
+simulate
+in_0=0
+simulate
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0 (no change)
+
+# Re-enable the clock
+in_1=0
+simulate
+display
+# Expected: out_1=1, all other outputs=0
+
+# Clock should work again
+in_0=1
+simulate
+display
+in_0=0
+simulate
+display
+# Expected: out_2=1, all other outputs=0
+
+# ----- Test 4: Check the Carry Output (out_s) -----
+# The carry output should be high during outputs 5-9
+# and low during outputs 0-4
+
+# Reset to known state
+in_r=1
+simulate
+in_r=0
+simulate
+display
+# Expected: out_0=1, out_s=0, all other outputs=0
+
+# Advance through all states and check carry bit
+# State 0
+display
+# Expected: out_0=1, out_s=0
+
+# Advance to state 1
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_1=1, out_s=0
+
+# Advance to state 2
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_2=1, out_s=0
+
+# Advance to state 3
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_3=1, out_s=0
+
+# Advance to state 4
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_4=1, out_s=0
+
+# Advance to state 5 - carry should now be high
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_5=1, out_s=1
+
+# Advance to state 6
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_6=1, out_s=1
+
+# Advance to state 7
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_7=1, out_s=1
+
+# Advance to state 8
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_8=1, out_s=1
+
+# Advance to state 9
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_9=1, out_s=1
+
+# Advance to state 0 - carry should go low again
+in_0=1
+simulate
+in_0=0
+simulate
+display
+# Expected: out_0=1, out_s=0
