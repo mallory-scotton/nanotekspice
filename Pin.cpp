@@ -11,9 +11,10 @@ namespace nts
 {
 
 ///////////////////////////////////////////////////////////////////////////////
-Pin::Pin(Pin::Type type)
+Pin::Pin(Pin::Type type, const std::string& name)
     : m_state(Tristate::Undefined)
     , m_type(type)
+    , m_name(name)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,6 +70,12 @@ Pin::Type Pin::getType(void) const
 void Pin::clearLinks(void)
 {
     m_links.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+std::string Pin::getName(void) const
+{
+    return (m_name);
 }
 
 } // namespace nts

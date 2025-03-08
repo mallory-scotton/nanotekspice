@@ -191,7 +191,8 @@ void AComponent::draw(void)
             if (type == Pin::Type::ELECTRICAL)
                 continue;
 
-            m_pinLabels.push_back(std::to_string(i));
+            std::string name = m_pins[i].getName();
+            m_pinLabels.push_back(name.empty() ? std::to_string(i) : name);
 
             if (type == Pin::Type::INPUT) {
                 m_inputs.push_back((Ez::SlotInfo){
@@ -237,11 +238,17 @@ void AComponent::draw(void)
             continue;
         for (auto& link : m_pins[i].getLinks()) {
             if (auto other = link.component.lock()) {
+                std::string name = m_pins[i].getName();
+                std::string otherName = other->getPins()[link.pin].getName();
                 if (!ImNodes::Connection(
                     this,
-                    std::to_string(i).c_str(),
+                    name.empty()
+                        ? std::to_string(i).c_str()
+                        : name.c_str(),
                     other.get(),
-                    std::to_string(link.pin).c_str()
+                    otherName.empty()
+                        ? std::to_string(link.pin).c_str()
+                        : otherName.c_str()
                 )) {
                     m_pins[i].removeLink(other, link.pin);
                 }

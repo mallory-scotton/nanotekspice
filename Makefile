@@ -134,7 +134,7 @@ debug: build
 external:
 	$(SFML_COMPILATION)
 
-bonus: CXXFLAGS	+=	$(EXTERNAL_LIBS) -DNTS_BONUS
+bonus: CXXFLAGS	+=	-g3 $(EXTERNAL_LIBS) -DNTS_BONUS
 bonus: SOURCES += $(BONUS_SOURCES)
 bonus: external $(BONUS_OBJECTS) build
 
