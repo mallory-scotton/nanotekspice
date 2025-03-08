@@ -14,7 +14,8 @@ namespace nts::Sequencials
 FlipFlop::FlipFlop(const std::string& name)
     : AComponent(name, 6)
     , m_lastClock(Tristate::Undefined)
-    , m_state(Tristate::False)
+    , m_q1state(Tristate::False)
+    , m_q2state(Tristate::True)
 {
     m_pins[0] = Pin(Pin::Type::INPUT);      // Clock
     m_pins[1] = Pin(Pin::Type::INPUT);      // Data
@@ -32,8 +33,8 @@ Tristate FlipFlop::compute(size_t pin)
     if (pin <= 3)
         return (getInputState(pin));
     if (pin == 4)
-        return (m_state);
-    return (~m_state);
+        return (m_q1state);
+    return (m_q2state);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,20 +49,26 @@ void FlipFlop::simulate(size_t tick)
     Tristate set    = getInputState(2);
     Tristate reset  = getInputState(3);
 
-    if (reset == Tristate::True) {
-        m_state = Tristate::False;
+    if (reset && set) {
+        m_q1state = Tristate::True;
+        m_q2state = Tristate::True;
+    } else if (reset == Tristate::True) {
+        m_q1state = Tristate::False;
+        m_q2state = Tristate::True;
     } else if (set == Tristate::True) {
-        m_state = Tristate::True;
+        m_q1state = Tristate::True;
+        m_q2state = Tristate::False;
     } else {
         if (m_lastClock == Tristate::False && clock == Tristate::True) {
-            m_state = data;
+            m_q1state = data;
+            m_q2state = ~data;
         }
     }
 
     m_lastClock = clock;
 
-    propagateOutput(4, m_state);
-    propagateOutput(5, ~m_state);
+    propagateOutput(4, m_q1state);
+    propagateOutput(5, m_q2state);
 }
 
 } // namespace nts::Sequencials
