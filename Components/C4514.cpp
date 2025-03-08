@@ -63,20 +63,17 @@ Tristate C4514::compute(size_t pin)
         return (Tristate::False);
     }
 
-    // Calculate address (0-15)
     unsigned int address = 0;
     if (strobe == Tristate::True) {
+        address = m_latchedAddress;
+    } else {
         if (getInputState(1) == Tristate::True)     address |= 1;     // A
         if (getInputState(2) == Tristate::True)     address |= 2;     // B
         if (getInputState(20) == Tristate::True)    address |= 4;     // C
         if (getInputState(21) == Tristate::True)    address |= 8;     // D
-    } else {
-        address = m_latchedAddress;
     }
 
-    size_t outputPins[] = {
-        10, 8, 9, 7, 6, 5, 4, 3, 17, 16, 19, 18, 13, 12, 15, 14
-    };
+    size_t outputPins[] = {10,8,9,7,6,5,4,3,17,16,19,18,13,12,15,14};
 
     return (pin == outputPins[address]) ? Tristate::True : Tristate::False;
 }
@@ -99,9 +96,7 @@ void C4514::simulate(size_t tick)
     }
     m_previousStrobe = (currentStrobe == Tristate::True);
 
-    // Propagate all output pins
-    size_t outputPins[] = {10, 8, 11, 7, 6, 5, 4, 3, 17, 16, 19, 18, 13, 12, 15, 14};
-    for (size_t pin : outputPins) {
+    for (size_t pin : {10,8,11,7,6,5,4,3,17,16,19,18,13,12,15,14}) {
         propagateOutput(pin, compute(pin));
     }
 }
