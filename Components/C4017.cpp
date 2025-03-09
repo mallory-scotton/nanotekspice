@@ -43,7 +43,7 @@ Tristate C4017::decoder(size_t pin)
         return (Tristate::True);
     if ((pin == 2 || pin == 11) && m_count == 0) // count 0
         return (Tristate::True);
-    if (pin == 3 && m_count == 2) // count 2
+    if ((pin == 3 || pin == 11) && m_count == 2) // count 2
         return (Tristate::True);
     if (pin == 4 && m_count == 6) // count 6
         return (Tristate::True);
