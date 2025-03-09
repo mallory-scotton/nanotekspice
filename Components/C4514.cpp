@@ -59,8 +59,19 @@ Tristate C4514::compute(size_t pin)
     Tristate strobe = getInputState(0);
     Tristate inhibit = getInputState(22);
 
+    if (inhibit == Tristate::Undefined)
+        return (Tristate::Undefined);
+
     if (inhibit == Tristate::True) {
         return (Tristate::False);
+    }
+
+    if (strobe == Tristate::Undefined ||
+        getInputState(1) == Tristate::Undefined ||
+        getInputState(2) == Tristate::Undefined ||
+        getInputState(20) == Tristate::Undefined ||
+        getInputState(21) == Tristate::Undefined) {
+        return (Tristate::Undefined);
     }
 
     unsigned int address = 0;
@@ -87,16 +98,29 @@ void C4514::simulate(size_t tick)
 
     Tristate currentStrobe = getInputState(0);
 
-    if (m_previousStrobe && currentStrobe == Tristate::False) {
-        m_latchedAddress = 0;
-        if (getInputState(1) == Tristate::True)  m_latchedAddress |= 1; // A
-        if (getInputState(2) == Tristate::True)  m_latchedAddress |= 2; // B
-        if (getInputState(20) == Tristate::True) m_latchedAddress |= 4; // C
-        if (getInputState(21) == Tristate::True) m_latchedAddress |= 8; // D
+    if (currentStrobe == Tristate::Undefined) {
+        m_previousStrobe = false;
+    } else if (m_previousStrobe && currentStrobe == Tristate::False) {
+        if (getInputState(1) == Tristate::Undefined ||
+            getInputState(2) == Tristate::Undefined ||
+            getInputState(20) == Tristate::Undefined ||
+            getInputState(21) == Tristate::Undefined) {
+        } else {
+            m_latchedAddress = 0;
+            if (getInputState(1) == Tristate::True)  m_latchedAddress |= 1; // A
+            if (getInputState(2) == Tristate::True)  m_latchedAddress |= 2; // B
+            if (getInputState(20) == Tristate::True) m_latchedAddress |= 4; // C
+            if (getInputState(21) == Tristate::True) m_latchedAddress |= 8; // D
+        }
     }
-    m_previousStrobe = (currentStrobe == Tristate::True);
 
-    for (size_t pin : {10,8,11,7,6,5,4,3,17,16,19,18,13,12,15,14}) {
+    if (currentStrobe != Tristate::Undefined) {
+        m_previousStrobe = (currentStrobe == Tristate::True);
+    }
+
+    // Propagate outputs
+    size_t outputPins[] = {10,8,9,7,6,5,4,3,17,16,19,18,13,12,15,14};
+    for (size_t pin : outputPins) {
         propagateOutput(pin, compute(pin));
     }
 }
