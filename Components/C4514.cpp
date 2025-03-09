@@ -59,6 +59,9 @@ Tristate C4514::compute(size_t pin)
     Tristate strobe = getInputState(0);
     Tristate inhibit = getInputState(22);
 
+    if (strobe == Tristate::True) {
+        return (Tristate::Undefined);
+    }
     if (inhibit == Tristate::True) {
         return (Tristate::False);
     }
