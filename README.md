@@ -1,106 +1,384 @@
 # ⚡ NanoTekSpice
 
-**NanoTekSpice** is a digital circuit simulator that allows you to build
-and simulate logic circuits using various components like logic gates,
-flip-flops, and other integrated circuits.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://isocpp.org/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
-## 📌 Table Of Content
+**NanoTekSpice** is a sophisticated digital circuit simulator designed for educational and professional use. Built in C++20, it provides a comprehensive platform for designing, building, and simulating complex logic circuits using various digital components including logic gates, flip-flops, counters, memory units, and specialized integrated circuits.
 
-- [⚙️ Installation](#️-installation)
+## 📋 Table of Contents
+
+- [🔍 Project Overview](#-project-overview)
 - [✨ Features](#-features)
-- [🖼️ Gallery](#-gallery)
-- [📄 Documentation](#-documentation)
+- [🖼️ Gallery](#️-gallery)
+- [⚙️ Installation](#️-installation)
+- [🚀 Usage](#-usage)
+- [🔧 Build Instructions](#-build-instructions)
 - [🔗 Dependencies](#-dependencies)
-- [📂 Sources](#-sources)
-- [👥 Authors](#-authors)
+- [📂 Project Structure](#-project-structure)
+- [📄 Documentation](#-documentation)
+- [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
+- [📞 Contact](#-contact)
+
+## 🔍 Project Overview
+
+NanoTekSpice is an advanced digital circuit simulator that implements a comprehensive set of digital logic components following industry standards. The project features both a command-line interface for scripted simulations and an optional graphical interface for visual circuit design and real-time manipulation.
+
+### Key Highlights
+
+- **Educational Focus**: Perfect for learning digital logic and circuit design principles
+- **Industry-Standard Components**: Implements real IC specifications (74xx series, 40xx series)
+- **Tristate Logic**: Full support for high-impedance states and undefined logic levels
+- **Modular Architecture**: Clean, extensible codebase following modern C++ practices
+- **Cross-Platform**: Supports Linux distributions with comprehensive dependency management
+
+## ✨ Features
+
+### Core Simulation Engine
+- **Tristate Logic System**: Complete implementation of TRUE, FALSE, and UNDEFINED states
+- **Cycle-Accurate Simulation**: Precise timing simulation with clock-based operations
+- **Signal Propagation**: Intelligent signal propagation with cycle detection
+- **Real-Time Debugging**: Step-by-step simulation with state inspection
+
+### Supported Components
+
+#### Basic Logic Gates
+- **AND, OR, NOT, NAND, NOR, XOR**: Fundamental logic operations
+- **Quad Gates**: 4-gate packages (4001, 4011, 4071, 4081, 4030)
+
+#### Memory & Storage
+- **Flip-Flops**: D-type and JK flip-flops with set/reset functionality
+- **Counters**: Binary and Johnson counters (4017, 4040)
+- **RAM/ROM**: 4801 RAM and 2716 EPROM implementations
+
+#### Specialized ICs
+- **4008**: 4-bit binary full adder with carry
+- **4013**: Dual D-type flip-flop
+- **4069**: Hex inverter
+- **4094**: 8-bit shift register
+- **4512**: 8-channel data selector
+- **4514**: 4-to-16 line decoder
+
+#### Input/Output Components
+- **Interactive Inputs**: Manual input control and clock generators
+- **Output Displays**: State visualization and logging capabilities
+- **Constants**: TRUE/FALSE constant generators
+
+### Advanced Features
+- **Interactive Shell**: Command-line interface with live simulation control
+- **Circuit Loading**: Support for .nts circuit definition files
+- **Visual Editor** (Bonus): Drag-and-drop circuit design with ImGui/SFML
+- **Batch Processing**: Automated testing and validation systems
+- **Matrix Display**: LED matrix visualization for complex outputs
+
+## 🖼️ Gallery
+
+### Basic Logic Gates
+![Logic Gates](Screenshots/gates.gif)
+*Interactive logic gate simulation with real-time state visualization*
+
+### Complex Circuit Example
+![4-Input AND Gate](Screenshots/x4and.jpg)
+*4-input AND gate implementation using multiple IC components*
+
+### XOR Gate Implementation
+![XOR Gate](Screenshots/xor.png)
+*XOR gate circuit design showing pin connections and signal flow*
+
+### Visual Editor (Bonus)
+![Bad Apple Demo](Screenshots/badapple.gif)
+*Advanced visual editor with matrix display capabilities*
 
 ## ⚙️ Installation
 
-1. Clone the repository
-2. Compile the project using the Makefile
+### Prerequisites
+- **Operating System**: Linux (Ubuntu 18.04+, Fedora 30+, or equivalent)
+- **Compiler**: GCC 10+ or Clang 12+ with C++20 support
+- **Build System**: GNU Make
+- **Version Control**: Git
 
-```sh
-make
-```
+### Quick Start
 
-3. Run the simulator
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/mallory-scotton/nanotekspice.git
+   cd nanotekspice
+   ```
 
-```sh
-./nanotekspice [circuit_file]
-```
+2. **Install Dependencies**
+   ```bash
+   make deps
+   ```
+   *Automatically detects and installs required packages for your distribution*
 
-4. (Optional) To build the bonus
+3. **Build the Project**
+   ```bash
+   make
+   ```
 
-```sh
+4. **Run Your First Simulation**
+   ```bash
+   ./nanotekspice Circuits/and.nts
+   ```
+
+### Building the Visual Editor (Bonus)
+
+```bash
 make fclean bonus
 ./nanotekspice
 ```
 
-## ✨ Features
+## 🚀 Usage
 
-* Simulation of digital logic circuits
-* Support for various components:
-    * Basic logic gates (AND, OR, NOT, etc.)
-    * Flip-flops and memory components
-    * Input/output components
-* Interactive shell for controlling the simulation
-* Visual representation of circuit states
-* Real-time circuit manipulation
+### Command Line Interface
 
-## 🖼️ Gallery
+**Basic Simulation:**
+```bash
+./nanotekspice <circuit_file.nts>
+```
 
-![](.github/x4and.jpg)
+**Available Commands in Simulator:**
+- `display` - Show current state of all outputs
+- `simulate` - Execute one clock cycle
+- `loop` - Run continuous simulation
+- `<input>=<value>` - Set input values (0, 1, or U for undefined)
+- `exit` - Terminate simulation
 
-## 📄 Documentation
+**Example Session:**
+```bash
+$ ./nanotekspice Circuits/and.nts
+> a=1
+> b=1
+> simulate
+> display
+s: 1
+> exit
+```
 
-The circuits are described in configuration files (.nts) found in the Circuits directory.
+### Circuit Definition Files (.nts)
 
-Available commands in simulator mode:
+NanoTekSpice uses a simple text format for circuit definitions:
 
-- `display`: Display the current state of pins
-- `simulate`: Simulate a clock tick
-- `loop`: Run simulation continuously
-- `exit`: Exit the program
+```
+# Example: Simple AND gate
+.chipsets:
+and a
 
-For detailed component specifications and examples, please refer to the Documentations directory.
+.links:
+a:1 input_a
+a:2 input_b
+a:3 output_s
+
+.inputs:
+input_a
+input_b
+
+.outputs:
+output_s
+```
+
+### Visual Editor
+
+Launch the visual editor without arguments to access the graphical interface:
+```bash
+./nanotekspice
+```
+
+Features include:
+- Drag-and-drop component placement
+- Visual wire routing
+- Real-time simulation
+- Component property editing
+- Circuit export to .nts format
+
+## 🔧 Build Instructions
+
+### Makefile Targets
+
+| Target | Description |
+|--------|-------------|
+| `make` or `make build` | Build the standard CLI version |
+| `make debug` | Build with debug symbols (-g3) |
+| `make bonus` | Build the visual editor with SFML/ImGui |
+| `make clean` | Remove object files |
+| `make fclean` | Remove all build artifacts |
+| `make re` | Clean rebuild |
+| `make deps` | Install system dependencies |
+
+### Compilation Flags
+
+- **Standard**: `-std=c++20 -Wall -Wextra`
+- **Debug**: Additional `-g3` flag
+- **Bonus**: Includes SFML static libraries and ImGui integration
+
+### Custom Build Configuration
+
+For advanced users, you can modify the Makefile variables:
+```makefile
+CXX = g++                    # Compiler (g++, clang++)
+CXXFLAGS = -std=c++20 -Wall  # Compilation flags
+TARGET = nanotekspice        # Executable name
+```
 
 ## 🔗 Dependencies
 
-- C++ compiler supporting C++20
-- [SFML](https://www.sfml-dev.org/fr/) (Simple and Fast Multimedia Library) for graphical interface
+### Core Dependencies
+- **C++20 Compiler**: GCC 10+ or Clang 12+
+- **GNU Make**: Build system
+- **Standard Library**: Full C++20 STL support
 
-## 📂 Sources
+### Visual Editor Dependencies (Bonus)
+- **SFML 2.5+**: Graphics, window management, and audio
+- **ImGui**: Immediate mode GUI framework
+- **System Libraries**:
+  - OpenGL
+  - X11, Xrandr, Xcursor, Xinerama, Xi
+  - FreeType, FLAC, Vorbis, OGG
+  - udev, zlib
 
-The project is organized as follows:
+### Automatic Dependency Installation
 
-- `Bonus`: The base for the bonus visual editor
-- `Circuits`: Circuit definition files (.nts)
-- `Components`: Base implementation of circuit components
-- `Documentations`: Documentation for components
-- `Errors`: Custom error exception
-- `External`: External libraries such as SFML and ImGui
-- `Gates`: Basic implementation of logical gates
-- `Sequencials`: Basic implementation of sequencial component
-- `Shell`: Command interface implementation
-- `Specials`: Specials components such as Input/Output
-- `Tests`: Test cases for the project
+The project includes automatic dependency management:
+```bash
+make deps  # Detects your package manager and installs dependencies
+```
 
-## 👥 Authors
+Supported package managers:
+- **APT** (Ubuntu, Debian): `libsfml-dev`, `libglfw3-dev`, etc.
+- **DNF** (Fedora, RHEL): `sfml-devel`, `mesa-libGL-devel`, etc.
 
-_TekyoDrift Team_
+## 📂 Project Structure
 
-- [🐵 Mallory SCOTTON](https://github.com/mallory-scotton) _(Project Leader)_
-- [🙉 Hugo CATHELAIN](https://github.com/Hugo-Cathelain)
+```
+nanotekspice/
+├── 📁 Bonus/              # Visual editor implementation
+│   ├── Bonus.cpp/hpp     # Main GUI application
+│   ├── Matrix.cpp/hpp    # LED matrix visualization
+│   └── DigitalInput.cpp/hpp # Multi-bit input components
+├── 📁 Components/         # Integrated circuit implementations
+│   ├── C2716.cpp/hpp     # 2716 EPROM
+│   ├── C4008.cpp/hpp     # 4-bit binary adder
+│   ├── C4013.cpp/hpp     # Dual D flip-flop
+│   └── ...               # Additional IC components
+├── 📁 Gates/              # Basic logic gate implementations
+│   ├── And.cpp/hpp       # AND gate
+│   ├── Or.cpp/hpp        # OR gate
+│   └── ...               # Other basic gates
+├── 📁 Sequencials/        # Sequential logic components
+│   ├── FlipFlop.cpp/hpp  # Generic flip-flop implementation
+│   └── Counter.cpp/hpp   # Counter components
+├── 📁 Specials/           # Special I/O components
+│   ├── Input.cpp/hpp     # Manual input control
+│   ├── Output.cpp/hpp    # Output display
+│   └── Clock.cpp/hpp     # Clock generator
+├── 📁 Shell/              # Command-line interface
+│   ├── Shell.cpp/hpp     # Interactive shell
+│   ├── Parser.cpp/hpp    # Circuit file parser
+│   └── Circuit.cpp/hpp   # Circuit container
+├── 📁 Errors/             # Exception hierarchy
+├── 📁 External/           # Third-party libraries
+│   ├── SFML/             # Graphics library
+│   └── ImGui/            # GUI framework
+├── 📁 Circuits/           # Example circuit definitions
+├── 📁 Documentations/     # Component specifications
+├── 📁 Tests/              # Unit tests
+└── Core Files
+    ├── AComponent.cpp/hpp # Abstract component base
+    ├── Pin.cpp/hpp       # Pin management
+    ├── Tristate.cpp/hpp  # Tristate logic system
+    ├── Factory.cpp/hpp   # Component factory
+    └── Main.cpp          # Application entry point
+```
+
+## 📄 Documentation
+
+### Component Specifications
+Detailed PDF documentation for each IC component is available in the `Documentations/` directory:
+- Logic gate truth tables and timing diagrams
+- Pin configurations and electrical characteristics
+- Usage examples and circuit integration guides
+
+### Circuit Examples
+The `Circuits/` directory contains numerous example circuits:
+- Basic gate combinations
+- Complex IC demonstrations
+- Educational examples for learning digital logic
+
+### API Reference
+For developers extending NanoTekSpice:
+- `IComponent`: Component interface specification
+- `AComponent`: Abstract base class implementation
+- `Tristate`: Three-state logic system
+- `Pin`: Connection and signal management
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) before getting started.
+
+### Development Process
+
+1. **Fork the Repository**
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Follow Code Standards**
+   - C++20 best practices
+   - Consistent naming conventions
+   - Comprehensive documentation
+4. **Test Your Changes**
+   ```bash
+   make test  # Run test suite
+   ```
+5. **Submit a Pull Request**
+
+### Code of Conduct
+This project adheres to a strict code of conduct. Please review our guidelines to ensure a welcoming environment for all contributors.
+
+### Reporting Issues
+- Use GitHub Issues for bug reports
+- Include system information and error messages
+- Provide minimal reproduction steps
 
 ## 📜 License
 
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for complete details.
+
+```
 MIT License
 
 Copyright (c) 2025 TekyoDrift
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+## 📞 Contact
+
+**Project Maintainer**: Mallory SCOTTON  
+**Email**: mscotton.pro@gmail.com  
+**GitHub**: [@mallory-scotton](https://github.com/mallory-scotton)
+
+**Development Team**: TekyoDrift  
+- [🐵 Mallory SCOTTON](https://github.com/mallory-scotton) _(Project Leader)_
+- [🙉 Hugo CATHELAIN](https://github.com/Hugo-Cathelain) _(Core Developer)_
+
+For technical support, feature requests, or collaboration opportunities, please don't hesitate to reach out!
+
+---
+
+<div align="center">
+
+**NanoTekSpice** - *Coded with ❤️ by the TekyoDrift Team*
+
+*Empowering digital circuit education through innovative simulation technology*
+
+</div>
